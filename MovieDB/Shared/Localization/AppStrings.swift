@@ -19,6 +19,8 @@ enum AppStrings {
     static let releaseDate = "Release Date"
     static let runtime = "Runtime"
     static let minutes = "min"
+    static let retry = "Try Again"
+    static let emptyMovies = "No movies available at the moment."
 
     enum Error {
         static let invalidURL = "Invalid request."
