@@ -8,7 +8,7 @@
 import Foundation
 
 protocol MoviesRepository {
-    func nowPlaying(page: Int) async throws -> (movies: [Movie], totalPages: Int)
+    func popular(page: Int) async throws -> (movies: [Movie], totalPages: Int)
     func movieDetail(id: Int) async throws -> Movie
     func search(query: String, page: Int) async throws -> (movies: [Movie], totalPages: Int)
 }

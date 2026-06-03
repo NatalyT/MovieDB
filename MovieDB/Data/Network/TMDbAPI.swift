@@ -37,7 +37,7 @@ final class TMDbAPIClient: MoviesRepository {
 
     // MARK: - MoviesRepository
 
-    func nowPlaying(page: Int) async throws -> (movies: [Movie], totalPages: Int) {
+    func popular(page: Int) async throws -> (movies: [Movie], totalPages: Int) {
         let url = try makeURL(path: "/movie/popular", queryItems: [
             URLQueryItem(name: "page", value: String(page))
         ])

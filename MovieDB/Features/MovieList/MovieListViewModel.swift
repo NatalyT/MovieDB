@@ -84,7 +84,7 @@ final class MovieListViewModel: ObservableObject {
 
         Task {
             do {
-                let result = try await repository.nowPlaying(page: page)
+                let result = try await repository.popular(page: page)
                 let existingIDs = Set(items.map(\.id))
                 let newItems = result.movies
                     .filter { !existingIDs.contains($0.id) }
