@@ -14,24 +14,25 @@ enum ErrorMapping {
         case let apiError as TMDbAPIError:
             switch apiError {
             case .invalidURL:
-                return AppStrings.Error.invalidURL
+                return String(localized: "error.invalidURL", defaultValue: "Invalid request.")
             case .decodingFailed:
-                return AppStrings.Error.decodingFailed
+                return String(localized: "error.decodingFailed", defaultValue: "Could not read server data.")
             }
 
         case let httpError as HTTPClientError:
             switch httpError {
             case .invalidResponse:
-                return AppStrings.Error.invalidResponse
+                return String(localized: "error.invalidResponse", defaultValue: "Invalid server response.")
             case .httpStatus(let code):
-                return AppStrings.Error.httpStatus(code)
+                let format = String(localized: "error.httpStatus", defaultValue: "Request failed (HTTP %d).")
+                return String(format: format, code)
             }
 
         case is URLError:
-            return AppStrings.Error.network
+            return String(localized: "error.network", defaultValue: "Network error. Please try again.")
 
         default:
-            return AppStrings.Error.unknown
+            return String(localized: "error.unknown", defaultValue: "Something went wrong.")
         }
     }
 }

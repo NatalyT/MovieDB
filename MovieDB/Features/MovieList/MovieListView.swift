@@ -25,7 +25,7 @@ struct MovieListView: View {
     var body: some View {
         NavigationStack {
             content
-                .navigationTitle(AppStrings.popular)
+                .navigationTitle(LocalizedStringKey("movies.popular"))
                 .navigationDestination(for: Int.self) { movieID in
                     MovieDetailView(
                         viewModel: viewModel.makeDetailViewModel(for: movieID)
@@ -79,7 +79,7 @@ struct MovieListView: View {
                 Image(systemName: "film")
                     .font(.largeTitle)
                     .foregroundStyle(.secondary)
-                Text(AppStrings.emptyMovies)
+                Text("movies.empty")
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -96,7 +96,7 @@ struct MovieListView: View {
                 Text(message)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                Button(AppStrings.retry) {
+                Button("general.retry") {
                     viewModel.retry()
                 }
                 .buttonStyle(.bordered)
@@ -113,7 +113,7 @@ struct MovieListView: View {
             Text(message)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Button(AppStrings.retry) {
+            Button("general.retry") {
                 viewModel.retryLoadMore()
             }
             .font(.caption)

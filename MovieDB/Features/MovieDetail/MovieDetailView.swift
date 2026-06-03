@@ -59,7 +59,7 @@ struct MovieDetailView: View {
                 Text(message)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                Button(AppStrings.retry) {
+                Button("general.retry") {
                     viewModel.retry()
                 }
                 .buttonStyle(.bordered)
@@ -106,7 +106,7 @@ struct MovieDetailView: View {
 
                 HStack(spacing: 8) {
                     scoreCircle(percent: data.scorePercent, text: data.scoreText)
-                    Text(AppStrings.userScore)
+                    Text("movie.userScore")
                         .font(.caption)
                         .fontWeight(.semibold)
                 }
@@ -189,7 +189,7 @@ struct MovieDetailView: View {
             // Overview
             if !data.overview.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(AppStrings.overview)
+                    Text("movie.overview")
                         .font(.headline)
                     Text(data.overview)
                         .font(.body)

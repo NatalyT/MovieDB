@@ -73,12 +73,20 @@ final class MovieDetailViewModel: ObservableObject {
     }
 
     private func formatGenres(_ names: [String]) -> String {
-        guard !names.isEmpty else { return "" }
-        if names.count == 1 { return names[0] }
-
-        let allButLast = names.dropLast().joined(separator: ", ")
-        let last = names.last ?? ""
-        return "\(allButLast), and \(last)"
+        switch names.count {
+        case 0:
+            return ""
+        case 1:
+            return names[0]
+        case 2:
+            let and = String(localized: "genres.and", defaultValue: "and")
+            return "\(names[0]) \(and) \(names[1])"
+        default:
+            let and = String(localized: "genres.and", defaultValue: "and")
+            let allButLast = names.dropLast().joined(separator: ", ")
+            let last = names.last ?? ""
+            return "\(allButLast), \(and) \(last)"
+        }
     }
 
     private func formatRuntime(_ minutes: Int) -> String {
