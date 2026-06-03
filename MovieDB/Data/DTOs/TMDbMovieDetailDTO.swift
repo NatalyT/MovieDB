@@ -7,6 +7,10 @@
 
 import Foundation
 
+private enum Constants {
+    static let theatricalReleaseType = 3
+}
+
 struct TMDbMovieDetailDTO: Decodable {
     let id: Int
     let title: String
@@ -19,6 +23,7 @@ struct TMDbMovieDetailDTO: Decodable {
     let genres: [GenreDTO]
     let runtime: Int?
     let tagline: String?
+    let releaseDates: TMDbReleaseDatesDTO?
 
     enum CodingKeys: String, CodingKey {
         case id, title, overview, genres, runtime, tagline
@@ -27,11 +32,11 @@ struct TMDbMovieDetailDTO: Decodable {
         case releaseDate = "release_date"
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
+        case releaseDates = "release_dates"
     }
 
-    func toDomainModel() -> Movie {
-        let formatter = DateFormatter.tmdbDate
-        let date = releaseDate.flatMap { formatter.date(from: $0) }
+    func toDomainModel(region: String = "US") -> Movie {
+        let date = regionalReleaseDate(for: region) ?? primaryReleaseDate()
 
         return Movie(
             id: id,
@@ -47,6 +52,51 @@ struct TMDbMovieDetailDTO: Decodable {
             runtime: runtime,
             tagline: tagline
         )
+    }
+
+    // MARK: - Private
+
+    private func primaryReleaseDate() -> Date? {
+        releaseDate.flatMap { DateFormatter.tmdbDate.date(from: $0) }
+    }
+
+    private func regionalReleaseDate(for region: String) -> Date? {
+        guard let countryRelease = releaseDates?.results.first(where: { $0.countryCode == region }) else {
+            return nil
+        }
+
+        let theatrical = countryRelease.releaseDates
+            .first { $0.type == Constants.theatricalReleaseType }
+
+        guard let dateString = theatrical?.releaseDate else { return nil }
+
+        return DateFormatter.tmdbDateTime.date(from: dateString)
+    }
+}
+
+// MARK: - Release Dates DTOs
+
+struct TMDbReleaseDatesDTO: Decodable {
+    let results: [TMDbCountryReleaseDTO]
+}
+
+struct TMDbCountryReleaseDTO: Decodable {
+    let countryCode: String
+    let releaseDates: [TMDbReleaseDateEntryDTO]
+
+    enum CodingKeys: String, CodingKey {
+        case countryCode = "iso_3166_1"
+        case releaseDates = "release_dates"
+    }
+}
+
+struct TMDbReleaseDateEntryDTO: Decodable {
+    let releaseDate: String
+    let type: Int
+
+    enum CodingKeys: String, CodingKey {
+        case releaseDate = "release_date"
+        case type
     }
 }
 

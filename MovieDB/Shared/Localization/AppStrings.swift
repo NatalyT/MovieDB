@@ -9,17 +9,16 @@ import Foundation
 
 enum AppStrings {
     static let appTitle = "MovieDB"
-    static let nowPlaying = "Now Playing"
+    static let popular = "Popular"
     static let search = "Search"
     static let searchPlaceholder = "Search movies..."
     static let noResults = "No movies found."
     static let genres = "Genres"
     static let overview = "Overview"
-    static let rating = "Rating"
     static let releaseDate = "Release Date"
     static let runtime = "Runtime"
-    static let minutes = "min"
     static let retry = "Try Again"
+    static let userScore = "User Score"
     static let emptyMovies = "No movies available at the moment."
 
     enum Error {

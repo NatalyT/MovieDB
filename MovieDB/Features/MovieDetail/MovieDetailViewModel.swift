@@ -1,0 +1,93 @@
+//
+//  MovieDetailViewModel.swift
+//  MovieDB
+//
+//  Created by Natalia Tatarinteva on 02.06.26.
+//
+
+import Foundation
+import Combine
+
+@MainActor
+final class MovieDetailViewModel: ObservableObject {
+
+    @Published private(set) var state: MovieDetailViewState = .loading
+
+    private let movieID: Int
+    private let repository: MoviesRepository
+
+    init(movieID: Int, repository: MoviesRepository) {
+        self.movieID = movieID
+        self.repository = repository
+    }
+
+    // MARK: - Loading
+
+    func load() {
+        state = .loading
+
+        Task {
+            do {
+                let movie = try await repository.movieDetail(id: movieID)
+                state = .loaded(mapToViewData(movie))
+            } catch {
+                state = .error(ErrorMapping.mapToAlert(error))
+            }
+        }
+    }
+
+    func retry() {
+        load()
+    }
+
+    // MARK: - Private
+
+    private func mapToViewData(_ movie: Movie) -> MovieDetailData {
+        let dateText = movie.releaseDate.map { DateFormatter.displayDate.string(from: $0) } ?? ""
+        let yearText = movie.releaseDate.map { formatYear($0) } ?? ""
+        let scorePercent = Int(round(movie.voteAverage * 10))
+        let scoreText = "\(scorePercent)%"
+        let runtimeText = movie.runtime.map { formatRuntime($0) }
+        let genresText = formatGenres(movie.genres.map(\.name))
+        let posterURL = movie.posterPath.flatMap { ImageURL.url(path: $0, size: .w500) }
+        let backdropURL = movie.backdropPath.flatMap { ImageURL.url(path: $0, size: .w500) }
+
+        return MovieDetailData(
+            title: movie.title,
+            yearText: yearText,
+            tagline: movie.tagline,
+            overview: movie.overview,
+            scorePercent: scorePercent,
+            scoreText: scoreText,
+            releaseDateText: dateText,
+            genresText: genresText,
+            runtimeText: runtimeText,
+            posterURL: posterURL,
+            backdropURL: backdropURL
+        )
+    }
+
+    private func formatYear(_ date: Date) -> String {
+        let calendar = Calendar.current
+        return String(calendar.component(.year, from: date))
+    }
+
+    private func formatGenres(_ names: [String]) -> String {
+        guard !names.isEmpty else { return "" }
+        if names.count == 1 { return names[0] }
+
+        let allButLast = names.dropLast().joined(separator: ", ")
+        let last = names.last ?? ""
+        return "\(allButLast), and \(last)"
+    }
+
+    private func formatRuntime(_ minutes: Int) -> String {
+        let hours = minutes / 60
+        let mins = minutes % 60
+        if hours > 0 {
+            return "\(hours)h \(mins)m"
+        }
+        return "\(mins)m"
+    }
+
+}

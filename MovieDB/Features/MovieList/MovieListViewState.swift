@@ -23,7 +23,6 @@ struct MovieListLoadedState: Equatable {
 struct MovieCardViewData: Identifiable, Equatable {
     let id: Int
     let title: String
-    let ratingText: String
     let releaseDateText: String
     let posterURL: URL?
 }

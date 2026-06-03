@@ -25,7 +25,12 @@ struct MovieListView: View {
     var body: some View {
         NavigationStack {
             content
-                .navigationTitle(AppStrings.nowPlaying)
+                .navigationTitle(AppStrings.popular)
+                .navigationDestination(for: Int.self) { movieID in
+                    MovieDetailView(
+                        viewModel: viewModel.makeDetailViewModel(for: movieID)
+                    )
+                }
         }
         .task {
             viewModel.loadInitial()
@@ -45,10 +50,13 @@ struct MovieListView: View {
             ScrollView {
                 LazyVGrid(columns: Constants.columns, spacing: Constants.gridSpacing) {
                     ForEach(loadedState.items) { item in
-                        MovieCard(data: item)
-                            .onAppear {
-                                viewModel.loadMoreIfNeeded(currentItem: item)
-                            }
+                        NavigationLink(value: item.id) {
+                            MovieCard(data: item)
+                        }
+                        .buttonStyle(.plain)
+                        .onAppear {
+                            viewModel.loadMoreIfNeeded(currentItem: item)
+                        }
                     }
                 }
                 .padding(.horizontal)

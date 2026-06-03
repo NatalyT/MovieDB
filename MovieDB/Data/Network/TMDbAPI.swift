@@ -21,17 +21,24 @@ final class TMDbAPIClient: MoviesRepository {
     private let http: HTTPClient
     private let bearerToken: String
     private let decoder: JSONDecoder
+    private let language: String
+    private let region: String
 
-    init(http: HTTPClient, bearerToken: String, decoder: JSONDecoder = JSONDecoder()) {
+    init(http: HTTPClient, bearerToken: String, locale: Locale = .current, decoder: JSONDecoder = JSONDecoder()) {
         self.http = http
         self.bearerToken = bearerToken
         self.decoder = decoder
+
+        let languageCode = locale.language.languageCode?.identifier ?? "en"
+        let regionCode = locale.region?.identifier ?? "US"
+        self.language = "\(languageCode)-\(regionCode)"
+        self.region = regionCode
     }
 
     // MARK: - MoviesRepository
 
     func nowPlaying(page: Int) async throws -> (movies: [Movie], totalPages: Int) {
-        let url = try makeURL(path: "/movie/now_playing", queryItems: [
+        let url = try makeURL(path: "/movie/popular", queryItems: [
             URLQueryItem(name: "page", value: String(page))
         ])
 
@@ -42,10 +49,12 @@ final class TMDbAPIClient: MoviesRepository {
     }
 
     func movieDetail(id: Int) async throws -> Movie {
-        let url = try makeURL(path: "/movie/\(id)")
+        let url = try makeURL(path: "/movie/\(id)", queryItems: [
+            URLQueryItem(name: "append_to_response", value: "release_dates")
+        ])
         let dto: TMDbMovieDetailDTO = try await fetchAndDecode(url: url)
 
-        return dto.toDomainModel()
+        return dto.toDomainModel(region: region)
     }
 
     func search(query: String, page: Int) async throws -> (movies: [Movie], totalPages: Int) {
@@ -64,9 +73,13 @@ final class TMDbAPIClient: MoviesRepository {
 
     private func makeURL(path: String, queryItems: [URLQueryItem] = []) throws -> URL {
         var components = URLComponents(string: Constants.baseURL + path)
-        if !queryItems.isEmpty {
-            components?.queryItems = queryItems
-        }
+
+        var allItems = [
+            URLQueryItem(name: "language", value: language),
+            URLQueryItem(name: "region", value: region)
+        ]
+        allItems.append(contentsOf: queryItems)
+        components?.queryItems = allItems
 
         guard let url = components?.url else { throw TMDbAPIError.invalidURL }
         return url

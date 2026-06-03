@@ -27,6 +27,12 @@ final class MovieListViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // MARK: - Factory
+
+    func makeDetailViewModel(for movieID: Int) -> MovieDetailViewModel {
+        MovieDetailViewModel(movieID: movieID, repository: repository)
+    }
+
     // MARK: - Loading
 
     func loadInitial() {
@@ -98,12 +104,12 @@ final class MovieListViewModel: ObservableObject {
                 }
             } catch {
                 if isFirstPage {
-                    state = .error(mapErrorToAlert(error))
+                    state = .error(ErrorMapping.mapToAlert(error))
                 } else {
                     state = .loaded(MovieListLoadedState(
                         items: items,
                         isLoadingMore: false,
-                        loadMoreError: mapErrorToAlert(error)
+                        loadMoreError: ErrorMapping.mapToAlert(error)
                     ))
                 }
             }
@@ -113,41 +119,14 @@ final class MovieListViewModel: ObservableObject {
 
     private func mapToViewData(_ movie: Movie) -> MovieCardViewData {
         let dateText = movie.releaseDate.map { DateFormatter.displayDate.string(from: $0) } ?? ""
-        let ratingText = String(format: "%.1f", movie.voteAverage)
         let posterURL = movie.posterPath.flatMap { ImageURL.url(path: $0, size: .w185) }
 
         return MovieCardViewData(
             id: movie.id,
             title: movie.title,
-            ratingText: ratingText,
             releaseDateText: dateText,
             posterURL: posterURL
         )
     }
 
-    private func mapErrorToAlert(_ error: Error) -> String {
-        switch error {
-        case let apiError as TMDbAPIError:
-            switch apiError {
-            case .invalidURL:
-                return AppStrings.Error.invalidURL
-            case .decodingFailed:
-                return AppStrings.Error.decodingFailed
-            }
-
-        case let httpError as HTTPClientError:
-            switch httpError {
-            case .invalidResponse:
-                return AppStrings.Error.invalidResponse
-            case .httpStatus(let code):
-                return AppStrings.Error.httpStatus(code)
-            }
-
-        case is URLError:
-            return AppStrings.Error.network
-
-        default:
-            return AppStrings.Error.unknown
-        }
-    }
 }
