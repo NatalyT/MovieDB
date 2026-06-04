@@ -48,7 +48,7 @@ struct MovieListView: View {
                         .buttonStyle(.plain)
                     }
                 }
-                .onChange(of: viewModel.searchQuery) { _ in
+                .onChange(of: viewModel.searchQuery) {
                     viewModel.searchQueryChanged()
                 }
                 .navigationDestination(for: Int.self) { movieID in
