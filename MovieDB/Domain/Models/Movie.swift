@@ -15,8 +15,6 @@ struct Movie: Equatable, Identifiable {
     let backdropPath: String?
     let releaseDate: Date?
     let voteAverage: Double
-    let voteCount: Int
-    let genreIDs: [Int]
     let genres: [Genre]
     let runtime: Int?
     let tagline: String?

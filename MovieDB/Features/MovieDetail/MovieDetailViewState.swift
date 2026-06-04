@@ -9,11 +9,11 @@ import Foundation
 
 enum MovieDetailViewState {
     case loading
-    case loaded(MovieDetailData)
+    case loaded(MovieDetailLoadedState)
     case error(String)
 }
 
-struct MovieDetailData: Equatable {
+struct MovieDetailLoadedState: Equatable {
     let title: String
     let yearText: String
     let tagline: String?

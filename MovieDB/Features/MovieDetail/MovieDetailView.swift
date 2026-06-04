@@ -59,20 +59,9 @@ struct MovieDetailView: View {
             }
 
         case .error(let message):
-            VStack(spacing: 16) {
-                Image(systemName: "exclamationmark.triangle")
-                    .font(.largeTitle)
-                    .foregroundStyle(.secondary)
-                Text(message)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                Button("general.retry") {
-                    viewModel.retry()
-                }
-                .buttonStyle(.bordered)
+            ErrorStateView(message: message) {
+                viewModel.retry()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding()
         }
     }
 
@@ -111,7 +100,7 @@ struct MovieDetailView: View {
 
     // MARK: - Poster + Title
 
-    private func posterAndTitleSection(data: MovieDetailData) -> some View {
+    private func posterAndTitleSection(data: MovieDetailLoadedState) -> some View {
         HStack(alignment: .top, spacing: 16) {
             posterImage(url: data.posterURL)
 
@@ -156,7 +145,7 @@ struct MovieDetailView: View {
         }
     }
 
-    private func metadataLine(data: MovieDetailData) -> some View {
+    private func metadataLine(data: MovieDetailLoadedState) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             if !data.genresText.isEmpty {
                 Text(data.genresText)
@@ -200,7 +189,7 @@ struct MovieDetailView: View {
 
     // MARK: - Details section
 
-    private func detailsSection(data: MovieDetailData) -> some View {
+    private func detailsSection(data: MovieDetailLoadedState) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             // Tagline
             if let tagline = data.tagline, !tagline.isEmpty {

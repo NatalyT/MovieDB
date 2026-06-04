@@ -14,7 +14,6 @@ private enum Constants {
 enum ImageSize: String {
     case w185
     case w500
-    case original
 }
 
 enum ImageURL {

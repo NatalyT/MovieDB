@@ -94,20 +94,9 @@ struct MovieListView: View {
             }
 
         case .error(let message):
-            VStack(spacing: 16) {
-                Image(systemName: "exclamationmark.triangle")
-                    .font(.largeTitle)
-                    .foregroundStyle(.secondary)
-                Text(message)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                Button("general.retry") {
-                    viewModel.refresh()
-                }
-                .buttonStyle(.bordered)
+            ErrorStateView(message: message) {
+                viewModel.refresh()
             }
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 

@@ -248,7 +248,7 @@ final class MovieDetailViewModelTests: XCTestCase {
         sut.$state.dropFirst().sink { handler($0) }.store(in: &cancellables)
     }
 
-    private func loadAndGetData(file: StaticString = #file, line: UInt = #line) async -> MovieDetailData {
+    private func loadAndGetData(file: StaticString = #file, line: UInt = #line) async -> MovieDetailLoadedState {
         let exp = expectation(description: "loaded")
         observeState { if case .loaded = $0 { exp.fulfill() } }
 
@@ -257,7 +257,7 @@ final class MovieDetailViewModelTests: XCTestCase {
 
         guard case .loaded(let data) = sut.state else {
             XCTFail("Expected loaded state", file: file, line: line)
-            return MovieDetailData(
+            return MovieDetailLoadedState(
                 title: "", yearText: "", tagline: nil, overview: "",
                 scorePercent: 0, scoreText: "", releaseDateText: "",
                 genresText: "", runtimeText: nil, posterURL: nil,

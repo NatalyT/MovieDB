@@ -131,7 +131,7 @@ final class MovieListViewModel: ObservableObject {
     }
 
     private func mapToViewData(_ movie: Movie) -> MovieCardViewData {
-        let dateText = movie.releaseDate.map { DateFormatter.displayDate.string(from: $0) } ?? ""
+        let dateText = DateFormatter.displayString(from: movie.releaseDate)
         let posterURL = movie.posterPath.flatMap { ImageURL.url(path: $0, size: .w185) }
 
         return MovieCardViewData(

@@ -40,8 +40,6 @@ struct TMDbMovieDTO: Decodable {
             backdropPath: backdropPath,
             releaseDate: date,
             voteAverage: voteAverage,
-            voteCount: voteCount,
-            genreIDs: genreIDs,
             genres: [],
             runtime: nil,
             tagline: nil,

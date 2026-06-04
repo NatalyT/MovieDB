@@ -49,8 +49,6 @@ struct TMDbMovieDetailDTO: Decodable {
             backdropPath: backdropPath,
             releaseDate: date,
             voteAverage: voteAverage,
-            voteCount: voteCount,
-            genreIDs: genres.map(\.id),
             genres: genres.map { Genre(id: $0.id, name: $0.name) },
             runtime: runtime,
             tagline: tagline,

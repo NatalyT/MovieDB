@@ -30,4 +30,8 @@ extension DateFormatter {
         formatter.locale = .current
         return formatter
     }()
+
+    static func displayString(from date: Date?) -> String {
+        date.map { displayDate.string(from: $0) } ?? ""
+    }
 }

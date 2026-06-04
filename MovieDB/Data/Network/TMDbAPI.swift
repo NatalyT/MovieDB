@@ -91,12 +91,6 @@ final class TMDbAPIClient: MoviesRepository {
 
         let data = try await http.execute(request)
 
-        #if DEBUG
-        if let json = String(data: data, encoding: .utf8) {
-            print("[\(request.url?.path ?? "")] \(json)")
-        }
-        #endif
-
         do {
             return try decoder.decode(T.self, from: data)
         } catch {

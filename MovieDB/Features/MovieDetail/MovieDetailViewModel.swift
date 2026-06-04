@@ -46,8 +46,8 @@ final class MovieDetailViewModel: ObservableObject {
 
     // MARK: - Private
 
-    private func mapToViewData(_ movie: Movie) -> MovieDetailData {
-        let dateText = movie.releaseDate.map { DateFormatter.displayDate.string(from: $0) } ?? ""
+    private func mapToViewData(_ movie: Movie) -> MovieDetailLoadedState {
+        let dateText = DateFormatter.displayString(from: movie.releaseDate)
         let yearText = movie.releaseDate.map { formatYear($0) } ?? ""
         let scorePercent = Int(round(movie.voteAverage * 10))
         let scoreText = "\(scorePercent)%"
@@ -56,7 +56,7 @@ final class MovieDetailViewModel: ObservableObject {
         let posterURL = movie.posterPath.flatMap { ImageURL.url(path: $0, size: .w500) }
         let backdropURL = movie.backdropPath.flatMap { ImageURL.url(path: $0, size: .w500) }
 
-        return MovieDetailData(
+        return MovieDetailLoadedState(
             title: movie.title,
             yearText: yearText,
             tagline: movie.tagline,

@@ -86,7 +86,7 @@ final class MovieSearch {
     }
 
     private func mapToSuggestion(_ movie: Movie) -> MovieSuggestion {
-        let dateText = movie.releaseDate.map { DateFormatter.displayDate.string(from: $0) } ?? ""
+        let dateText = DateFormatter.displayString(from: movie.releaseDate)
         return MovieSuggestion(id: movie.id, title: movie.title, releaseDateText: dateText)
     }
 }
