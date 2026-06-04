@@ -19,6 +19,7 @@ private enum Constants {
 struct MovieDetailView: View {
 
     @StateObject private var viewModel: MovieDetailViewModel
+    @State private var showTrailer = false
 
     init(viewModel: MovieDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -48,6 +49,12 @@ struct MovieDetailView: View {
                     backdropImage(url: data.backdropURL)
                     posterAndTitleSection(data: data)
                     detailsSection(data: data)
+                }
+            }
+            .sheet(isPresented: $showTrailer) {
+                if let trailerURL = data.trailerURL {
+                    SafariView(url: trailerURL)
+                        .ignoresSafeArea()
                 }
             }
 
@@ -89,6 +96,19 @@ struct MovieDetailView: View {
             .clipped()
     }
 
+    // MARK: - Trailer
+
+    private var playTrailerButton: some View {
+        Button {
+            showTrailer = true
+        } label: {
+            Label("movie.playTrailer", systemImage: "play.fill")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.black)
+        }
+    }
+
     // MARK: - Poster + Title
 
     private func posterAndTitleSection(data: MovieDetailData) -> some View {
@@ -109,6 +129,10 @@ struct MovieDetailView: View {
                     Text("movie.userScore")
                         .font(.caption)
                         .fontWeight(.semibold)
+                }
+
+                if data.trailerURL != nil {
+                    playTrailerButton
                 }
             }
         }

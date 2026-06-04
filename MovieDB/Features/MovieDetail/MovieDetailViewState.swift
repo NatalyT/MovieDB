@@ -25,4 +25,5 @@ struct MovieDetailData: Equatable {
     let runtimeText: String?
     let posterURL: URL?
     let backdropURL: URL?
+    let trailerURL: URL?
 }

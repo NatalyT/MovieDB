@@ -20,4 +20,5 @@ struct Movie: Equatable, Identifiable {
     let genres: [Genre]
     let runtime: Int?
     let tagline: String?
+    let trailerYouTubeKey: String?
 }

@@ -44,7 +44,8 @@ struct TMDbMovieDTO: Decodable {
             genreIDs: genreIDs,
             genres: [],
             runtime: nil,
-            tagline: nil
+            tagline: nil,
+            trailerYouTubeKey: nil
         )
     }
 }

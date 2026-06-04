@@ -9,6 +9,8 @@ import Foundation
 
 private enum Constants {
     static let theatricalReleaseType = 3
+    static let youTubeSite = "YouTube"
+    static let trailerType = "Trailer"
 }
 
 struct TMDbMovieDetailDTO: Decodable {
@@ -24,9 +26,10 @@ struct TMDbMovieDetailDTO: Decodable {
     let runtime: Int?
     let tagline: String?
     let releaseDates: TMDbReleaseDatesDTO?
+    let videos: TMDbVideosDTO?
 
     enum CodingKeys: String, CodingKey {
-        case id, title, overview, genres, runtime, tagline
+        case id, title, overview, genres, runtime, tagline, videos
         case posterPath = "poster_path"
         case backdropPath = "backdrop_path"
         case releaseDate = "release_date"
@@ -50,7 +53,8 @@ struct TMDbMovieDetailDTO: Decodable {
             genreIDs: genres.map(\.id),
             genres: genres.map { Genre(id: $0.id, name: $0.name) },
             runtime: runtime,
-            tagline: tagline
+            tagline: tagline,
+            trailerYouTubeKey: youTubeTrailerKey()
         )
     }
 
@@ -58,6 +62,12 @@ struct TMDbMovieDetailDTO: Decodable {
 
     private func primaryReleaseDate() -> Date? {
         releaseDate.flatMap { DateFormatter.tmdbDate.date(from: $0) }
+    }
+
+    private func youTubeTrailerKey() -> String? {
+        videos?.results.first {
+            $0.site == Constants.youTubeSite && $0.type == Constants.trailerType
+        }?.key
     }
 
     private func regionalReleaseDate(for region: String) -> Date? {
@@ -98,6 +108,18 @@ struct TMDbReleaseDateEntryDTO: Decodable {
         case releaseDate = "release_date"
         case type
     }
+}
+
+// MARK: - Video DTOs
+
+struct TMDbVideosDTO: Decodable {
+    let results: [TMDbVideoDTO]
+}
+
+struct TMDbVideoDTO: Decodable {
+    let key: String
+    let site: String
+    let type: String
 }
 
 struct GenreDTO: Decodable {

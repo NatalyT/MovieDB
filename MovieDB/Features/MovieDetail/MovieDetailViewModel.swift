@@ -8,6 +8,10 @@
 import Foundation
 import Combine
 
+private enum Constants {
+    static let youTubeWatchBaseURL = "https://www.youtube.com/watch?v="
+}
+
 @MainActor
 final class MovieDetailViewModel: ObservableObject {
 
@@ -63,7 +67,10 @@ final class MovieDetailViewModel: ObservableObject {
             genresText: genresText,
             runtimeText: runtimeText,
             posterURL: posterURL,
-            backdropURL: backdropURL
+            backdropURL: backdropURL,
+            trailerURL: movie.trailerYouTubeKey.flatMap {
+                URL(string: Constants.youTubeWatchBaseURL + $0)
+            }
         )
     }
 

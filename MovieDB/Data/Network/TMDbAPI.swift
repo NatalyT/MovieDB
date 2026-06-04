@@ -50,7 +50,7 @@ final class TMDbAPIClient: MoviesRepository {
 
     func movieDetail(id: Int) async throws -> Movie {
         let url = try makeURL(path: "/movie/\(id)", queryItems: [
-            URLQueryItem(name: "append_to_response", value: "release_dates")
+            URLQueryItem(name: "append_to_response", value: "release_dates,videos")
         ])
         let dto: TMDbMovieDetailDTO = try await fetchAndDecode(url: url)
 
