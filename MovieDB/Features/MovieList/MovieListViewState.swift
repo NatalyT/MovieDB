@@ -20,6 +20,12 @@ struct MovieListLoadedState: Equatable {
     let loadMoreError: String?
 }
 
+struct MovieSuggestion: Identifiable, Equatable {
+    let id: Int
+    let title: String
+    let releaseDateText: String
+}
+
 struct MovieCardViewData: Identifiable, Equatable {
     let id: Int
     let title: String

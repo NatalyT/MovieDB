@@ -26,6 +26,31 @@ struct MovieListView: View {
         NavigationStack {
             content
                 .navigationTitle(LocalizedStringKey("movies.popular"))
+                .searchable(
+                    text: $viewModel.searchQuery,
+                    prompt: Text("search.placeholder")
+                )
+                .searchSuggestions {
+                    if viewModel.showNoResults {
+                        Text("search.noResults")
+                            .foregroundStyle(.secondary)
+                    }
+                    ForEach(viewModel.suggestions) { suggestion in
+                        NavigationLink(value: suggestion.id) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(suggestion.title)
+                                    .font(.body)
+                                Text(suggestion.releaseDateText)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .onChange(of: viewModel.searchQuery) { _ in
+                    viewModel.searchQueryChanged()
+                }
                 .navigationDestination(for: Int.self) { movieID in
                     MovieDetailView(
                         viewModel: viewModel.makeDetailViewModel(for: movieID)
@@ -48,27 +73,7 @@ struct MovieListView: View {
 
         case .loaded(let loadedState):
             ScrollView {
-                LazyVGrid(columns: Constants.columns, spacing: Constants.gridSpacing) {
-                    ForEach(loadedState.items) { item in
-                        NavigationLink(value: item.id) {
-                            MovieCard(data: item)
-                        }
-                        .buttonStyle(.plain)
-                        .onAppear {
-                            viewModel.loadMoreIfNeeded(currentItem: item)
-                        }
-                    }
-                }
-                .padding(.horizontal)
-
-                if loadedState.isLoadingMore {
-                    ProgressView()
-                        .padding()
-                }
-
-                if let error = loadedState.loadMoreError {
-                    loadMoreErrorView(message: error)
-                }
+                popularContent(loadedState)
             }
             .refreshable {
                 viewModel.refresh()
@@ -97,12 +102,40 @@ struct MovieListView: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                 Button("general.retry") {
-                    viewModel.retry()
+                    viewModel.refresh()
                 }
                 .buttonStyle(.bordered)
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+
+    // MARK: - Popular Grid
+
+    private func popularContent(_ loadedState: MovieListLoadedState) -> some View {
+        VStack(spacing: 0) {
+            LazyVGrid(columns: Constants.columns, spacing: Constants.gridSpacing) {
+                ForEach(loadedState.items) { item in
+                    NavigationLink(value: item.id) {
+                        MovieCard(data: item)
+                    }
+                    .buttonStyle(.plain)
+                    .onAppear {
+                        viewModel.loadMoreIfNeeded(currentItem: item)
+                    }
+                }
+            }
+            .padding(.horizontal)
+
+            if loadedState.isLoadingMore {
+                ProgressView()
+                    .padding()
+            }
+
+            if let error = loadedState.loadMoreError {
+                loadMoreErrorView(message: error)
+            }
         }
     }
 
