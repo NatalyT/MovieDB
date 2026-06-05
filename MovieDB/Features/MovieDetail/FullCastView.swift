@@ -15,23 +15,17 @@ private enum Constants {
 struct FullCastView: View {
 
     let cast: [CastViewData]
+    let crew: [CrewViewData]
 
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 24) {
-                HStack(spacing: 8) {
-                    Text("movie.cast")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    Text("\(cast.count)")
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.bottom, 4)
+                // MARK: - Cast
+                sectionHeader(title: "movie.cast", count: cast.count)
 
                 ForEach(cast) { member in
                     HStack(spacing: 16) {
-                        castPhoto(url: member.photoURL)
+                        profilePhoto(url: member.photoURL)
 
                         VStack(alignment: .leading, spacing: 6) {
                             Text(member.name)
@@ -41,13 +35,48 @@ struct FullCastView: View {
                         }
                     }
                 }
+
+                // MARK: - Crew
+                if !crew.isEmpty {
+                    Divider()
+                        .padding(.vertical, 8)
+
+                    sectionHeader(title: "movie.crew", count: crew.count)
+
+                    ForEach(crew) { member in
+                        HStack(spacing: 16) {
+                            profilePhoto(url: member.photoURL)
+
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(member.name)
+                                    .font(.headline)
+                                Text(member.job)
+                                    .font(.subheadline)
+                            }
+                        }
+                    }
+                }
             }
             .padding()
         }
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    private func castPhoto(url: URL?) -> some View {
+    // MARK: - Subviews
+
+    private func sectionHeader(title: LocalizedStringKey, count: Int) -> some View {
+        HStack(spacing: 8) {
+            Text(title)
+                .font(.title2)
+                .fontWeight(.bold)
+            Text("\(count)")
+                .font(.title2)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.bottom, 4)
+    }
+
+    private func profilePhoto(url: URL?) -> some View {
         Color.clear
             .frame(width: Constants.photoSize, height: Constants.photoSize)
             .overlay {

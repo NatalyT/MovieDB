@@ -54,7 +54,8 @@ struct TMDbMovieDetailDTO: Decodable {
             runtime: runtime,
             tagline: tagline,
             trailerYouTubeKey: youTubeTrailerKey(),
-            cast: credits?.cast.map { CastMember(id: $0.id, name: $0.name, character: $0.character, profilePath: $0.profilePath) } ?? []
+            cast: credits?.cast.map { CastMember(id: $0.id, name: $0.name, character: $0.character, profilePath: $0.profilePath) } ?? [],
+            crew: credits?.crew.map { CrewMember(id: $0.id, name: $0.name, job: $0.job, profilePath: $0.profilePath) } ?? []
         )
     }
 
@@ -126,6 +127,7 @@ struct TMDbVideoDTO: Decodable {
 
 struct TMDbCreditsDTO: Decodable {
     let cast: [TMDbCastDTO]
+    let crew: [TMDbCrewDTO]
 }
 
 struct TMDbCastDTO: Decodable {
@@ -136,6 +138,18 @@ struct TMDbCastDTO: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case id, name, character
+        case profilePath = "profile_path"
+    }
+}
+
+struct TMDbCrewDTO: Decodable {
+    let id: Int
+    let name: String
+    let job: String
+    let profilePath: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, job
         case profilePath = "profile_path"
     }
 }

@@ -27,11 +27,19 @@ struct MovieDetailLoadedState: Equatable {
     let backdropURL: URL?
     let trailerURL: URL?
     let cast: [CastViewData]
+    let crew: [CrewViewData]
 }
 
 struct CastViewData: Identifiable, Equatable {
     let id: Int
     let name: String
     let character: String
+    let photoURL: URL?
+}
+
+struct CrewViewData: Identifiable, Equatable {
+    let id: Int
+    let name: String
+    let job: String
     let photoURL: URL?
 }

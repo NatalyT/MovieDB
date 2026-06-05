@@ -271,6 +271,35 @@ final class MovieDetailViewModelTests: XCTestCase {
         XCTAssertTrue(data.cast.isEmpty)
     }
 
+    // MARK: - Crew
+
+    func testCrew_mapsMembersCorrectly() async {
+        let crew = [
+            CrewMember(id: 1, name: "Thomas Schnauz", job: "Director", profilePath: "/thomas.jpg"),
+            CrewMember(id: 2, name: "Jim Chory", job: "Executive Producer", profilePath: nil)
+        ]
+        let movie = Movie.stub(crew: crew)
+        repository.movieDetailResult = .success(movie)
+
+        let data = await loadAndGetData()
+
+        XCTAssertEqual(data.crew.count, 2)
+        XCTAssertEqual(data.crew[0].name, "Thomas Schnauz")
+        XCTAssertEqual(data.crew[0].job, "Director")
+        XCTAssertNotNil(data.crew[0].photoURL)
+        XCTAssertEqual(data.crew[1].name, "Jim Chory")
+        XCTAssertNil(data.crew[1].photoURL)
+    }
+
+    func testCrew_empty_returnsEmpty() async {
+        let movie = Movie.stub(crew: [])
+        repository.movieDetailResult = .success(movie)
+
+        let data = await loadAndGetData()
+
+        XCTAssertTrue(data.crew.isEmpty)
+    }
+
     // MARK: - Helpers
 
     private func observeState(_ handler: @escaping (MovieDetailViewState) -> Void) {
@@ -290,7 +319,7 @@ final class MovieDetailViewModelTests: XCTestCase {
                 title: "", yearText: "", tagline: nil, overview: "",
                 scorePercent: 0, scoreText: "", releaseDateText: "",
                 genresText: "", runtimeText: nil, posterURL: nil,
-                backdropURL: nil, trailerURL: nil, cast: []
+                backdropURL: nil, trailerURL: nil, cast: [], crew: []
             )
         }
         return data

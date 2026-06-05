@@ -71,13 +71,19 @@ final class MovieDetailViewModel: ObservableObject {
             trailerURL: movie.trailerYouTubeKey.flatMap {
                 URL(string: Constants.youTubeWatchBaseURL + $0)
             },
-            cast: movie.cast.map { mapToCastViewData($0) }
+            cast: movie.cast.map { mapToCastViewData($0) },
+            crew: movie.crew.map { mapToCrewViewData($0) }
         )
     }
 
     private func mapToCastViewData(_ member: CastMember) -> CastViewData {
         let photoURL = member.profilePath.flatMap { ImageURL.url(path: $0, size: .w185) }
         return CastViewData(id: member.id, name: member.name, character: member.character, photoURL: photoURL)
+    }
+
+    private func mapToCrewViewData(_ member: CrewMember) -> CrewViewData {
+        let photoURL = member.profilePath.flatMap { ImageURL.url(path: $0, size: .w185) }
+        return CrewViewData(id: member.id, name: member.name, job: member.job, photoURL: photoURL)
     }
 
     private func formatYear(_ date: Date) -> String {

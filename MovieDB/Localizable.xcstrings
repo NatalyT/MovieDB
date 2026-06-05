@@ -154,6 +154,38 @@
         }
       }
     },
+    "movie.crew" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crew"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crew"
+          }
+        }
+      }
+    },
+    "movie.fullCastCrew" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Besetzung und Crew"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full Cast & Crew"
+          }
+        }
+      }
+    },
     "movie.overview" : {
       "localizations" : {
         "de" : {

@@ -52,7 +52,7 @@ struct MovieDetailView: View {
                     backdropImage(url: data.backdropURL)
                     posterAndTitleSection(data: data)
                     detailsSection(data: data)
-                    castSection(cast: data.cast)
+                    castSection(cast: data.cast, crew: data.crew)
                 }
             }
             .sheet(isPresented: $showTrailer) {
@@ -219,7 +219,7 @@ struct MovieDetailView: View {
 
     // MARK: - Cast
 
-    private func castSection(cast: [CastViewData]) -> some View {
+    private func castSection(cast: [CastViewData], crew: [CrewViewData]) -> some View {
         Group {
             if !cast.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
@@ -233,17 +233,25 @@ struct MovieDetailView: View {
                                 castCard(member)
                             }
 
-                            if cast.count > Constants.castPreviewCount {
-                                NavigationLink {
-                                    FullCastView(cast: cast)
-                                } label: {
-                                    viewMoreCard
-                                }
-                                .buttonStyle(.plain)
+                            NavigationLink {
+                                FullCastView(cast: cast, crew: crew)
+                            } label: {
+                                viewMoreCard
                             }
+                            .buttonStyle(.plain)
                         }
                         .padding(.horizontal)
                     }
+                    NavigationLink {
+                        FullCastView(cast: cast, crew: crew)
+                    } label: {
+                        Text("movie.fullCastCrew")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .underline()
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal)
                 }
                 .padding(.bottom)
             }

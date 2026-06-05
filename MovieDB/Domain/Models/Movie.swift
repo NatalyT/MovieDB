@@ -20,11 +20,19 @@ struct Movie: Equatable, Identifiable {
     let tagline: String?
     let trailerYouTubeKey: String?
     let cast: [CastMember]
+    let crew: [CrewMember]
 }
 
 struct CastMember: Equatable, Identifiable {
     let id: Int
     let name: String
     let character: String
+    let profilePath: String?
+}
+
+struct CrewMember: Equatable, Identifiable {
+    let id: Int
+    let name: String
+    let job: String
     let profilePath: String?
 }
