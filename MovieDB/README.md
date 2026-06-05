@@ -1,0 +1,87 @@
+# MovieDB
+
+## Overview
+MovieDB is an iOS app that browses popular movies using The Movie Database (TMDB) API. Users can scroll through a grid of popular movies, view detailed information, search for movies with autocomplete suggestions, and play trailers.
+
+The app is built entirely in SwiftUI and targets iOS 17.
+
+---
+
+## Features
+- Browse popular movies in a responsive grid layout
+- View movie details: poster, backdrop, release date, genres, runtime, user score, tagline, and overview
+- Play movie trailers via YouTube (opens in an in-app Safari browser)
+- Search movies with debounced autocomplete suggestions
+- Falls back to local results when the API search returns empty or fails
+- Pagination with infinite scroll (loads next page near the end of the list)
+- Pull-to-refresh on the movie list
+- Localized in English and German (String Catalog)
+
+---
+
+## Architecture & Design Decisions
+The app follows Clean Architecture with MVVM, organized by feature:
+
+- **Views (SwiftUI)**
+  Render UI based on a ViewState enum. No business logic.
+- **ViewModels (@MainActor, ObservableObject)**
+  Own the UI state, handle loading, format data for display.
+- **Repository protocol**
+  Abstracts data access. The API client conforms directly since this is a read-only, single-source app.
+- **DTOs**
+  Separate API response structures from domain models. Two DTOs exist for movies: one for list endpoints (genre IDs only) and one for detail (full genres, runtime, videos, release dates).
+- **Domain models**
+  Plain structs with no framework dependencies.
+
+### Key choices
+- **Grid layout** over List -- matches the TMDB website and is more visual.
+- **ViewState enum** (`loading`, `loaded`, `empty`, `error`) for each screen -- makes state transitions explicit and testable.
+- **Pre-formatted display types** -- ViewModels produce ready-to-render strings (e.g., "2h 28m", "75%"), keeping Views free of formatting logic.
+- **`append_to_response`** for regional release dates and videos -- single API call instead of multiple requests.
+- **SFSafariViewController** for trailers -- YouTube embeds don't work reliably in WKWebView on iOS.
+- **API-first search with local fallback** -- avoids UI flicker from showing local results then replacing with API results.
+
+Dependencies are injected via initializers. No third-party libraries are used.
+
+---
+
+## Error Handling
+- Network errors, HTTP status codes, and decoding failures are mapped to user-friendly localized messages via `ErrorMapping`.
+- Full-screen error states with retry are shown on initial load failure.
+- Pagination errors are shown inline below the grid without clearing existing content.
+- Search falls back to local filtering on API failure.
+
+---
+
+## Testing
+Unit tests cover ViewModels and the search component (36 tests total):
+
+- **MovieListViewModelTests** -- initial load, pagination, duplicate filtering, load more error, refresh, search suggestion forwarding
+- **MovieDetailViewModelTests** -- load/error/retry, formatting for year, score, runtime, genres, trailer URL, tagline
+- **MovieSearchTests** -- debounce, API results, local fallback, cancel, empty/whitespace queries
+
+A `FakeMoviesRepository` with stubs and call tracking is used for all tests. Async state changes are observed via `XCTestExpectation` with Combine.
+
+---
+
+## Limitations & Possible Improvements
+Due to time constraints, some features were intentionally left out:
+
+- Image caching and retry (`AsyncImage` doesn't retry on failure or provide caching control)
+- Segmented control for Now Playing / Popular / Upcoming
+- Search result pagination
+- Offline support and persistent storage
+- Broader test coverage (e.g., DTO mapping, HTTPClient, integration tests)
+
+The current architecture allows these features to be added without major refactoring.
+
+---
+
+## How to Run
+1. Open `MovieDB.xcodeproj`
+2. Select an iPhone simulator (iOS 17+)
+3. Run the app (Cmd+R)
+
+No external dependencies or API key setup required. The TMDB API token is included in the project.
+
+In a production app, the API token would be stored securely (e.g., Keychain or build configuration) and excluded from version control.
