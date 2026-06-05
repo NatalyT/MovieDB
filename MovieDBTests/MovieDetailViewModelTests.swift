@@ -242,6 +242,35 @@ final class MovieDetailViewModelTests: XCTestCase {
         XCTAssertEqual(data.tagline, "Why so serious?")
     }
 
+    // MARK: - Cast
+
+    func testCast_mapsMembersCorrectly() async {
+        let cast = [
+            CastMember(id: 1, name: "Jon Bernthal", character: "Frank Castle", profilePath: "/jon.jpg"),
+            CastMember(id: 2, name: "Deborah Ann Woll", character: "Karen Page", profilePath: nil)
+        ]
+        let movie = Movie.stub(cast: cast)
+        repository.movieDetailResult = .success(movie)
+
+        let data = await loadAndGetData()
+
+        XCTAssertEqual(data.cast.count, 2)
+        XCTAssertEqual(data.cast[0].name, "Jon Bernthal")
+        XCTAssertEqual(data.cast[0].character, "Frank Castle")
+        XCTAssertNotNil(data.cast[0].photoURL)
+        XCTAssertEqual(data.cast[1].name, "Deborah Ann Woll")
+        XCTAssertNil(data.cast[1].photoURL)
+    }
+
+    func testCast_empty_returnsEmpty() async {
+        let movie = Movie.stub(cast: [])
+        repository.movieDetailResult = .success(movie)
+
+        let data = await loadAndGetData()
+
+        XCTAssertTrue(data.cast.isEmpty)
+    }
+
     // MARK: - Helpers
 
     private func observeState(_ handler: @escaping (MovieDetailViewState) -> Void) {
@@ -261,7 +290,7 @@ final class MovieDetailViewModelTests: XCTestCase {
                 title: "", yearText: "", tagline: nil, overview: "",
                 scorePercent: 0, scoreText: "", releaseDateText: "",
                 genresText: "", runtimeText: nil, posterURL: nil,
-                backdropURL: nil, trailerURL: nil
+                backdropURL: nil, trailerURL: nil, cast: []
             )
         }
         return data

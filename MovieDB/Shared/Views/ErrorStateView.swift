@@ -1,5 +1,5 @@
 //
-//  EmptyStateView.swift
+//  ErrorStateView.swift
 //  MovieDB
 //
 //  Created by Natalia Tatarinteva on 04.06.26.

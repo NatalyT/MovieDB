@@ -7,6 +7,9 @@
     " (%@)" : {
 
     },
+    "%lld" : {
+
+    },
     "error.decodingFailed" : {
       "localizations" : {
         "de" : {
@@ -135,18 +138,18 @@
         }
       }
     },
-    "movie.playTrailer" : {
+    "movie.cast" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trailer abspielen"
+            "value" : "Besetzung"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play Trailer"
+            "value" : "Cast"
           }
         }
       }
@@ -167,6 +170,38 @@
         }
       }
     },
+    "movie.playTrailer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trailer abspielen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play Trailer"
+          }
+        }
+      }
+    },
+    "movie.topBilledCast" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hauptdarsteller"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top Billed Cast"
+          }
+        }
+      }
+    },
     "movie.userScore" : {
       "localizations" : {
         "de" : {
@@ -179,6 +214,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "User Score"
+          }
+        }
+      }
+    },
+    "movie.viewMore" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mehr anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View More"
           }
         }
       }
@@ -204,13 +255,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beliebt"
+            "value" : "Beliebte Filme"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Popular"
+            "value" : "Popular Movies"
           }
         }
       }

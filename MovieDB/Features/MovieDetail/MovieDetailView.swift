@@ -14,6 +14,9 @@ private enum Constants {
     static let cornerRadius: CGFloat = 10
     static let scoreSize: CGFloat = 50
     static let scoreLineWidth: CGFloat = 4
+    static let castPhotoSize: CGFloat = 100
+    static let castCardWidth: CGFloat = 120
+    static let castPreviewCount = 9
 }
 
 struct MovieDetailView: View {
@@ -49,6 +52,7 @@ struct MovieDetailView: View {
                     backdropImage(url: data.backdropURL)
                     posterAndTitleSection(data: data)
                     detailsSection(data: data)
+                    castSection(cast: data.cast)
                 }
             }
             .sheet(isPresented: $showTrailer) {
@@ -206,12 +210,95 @@ struct MovieDetailView: View {
                         .font(.headline)
                     Text(data.overview)
                         .font(.body)
-                        .foregroundStyle(.secondary)
                 }
             }
         }
         .padding(.horizontal)
         .padding(.bottom)
+    }
+
+    // MARK: - Cast
+
+    private func castSection(cast: [CastViewData]) -> some View {
+        Group {
+            if !cast.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("movie.topBilledCast")
+                        .font(.headline)
+                        .padding(.horizontal)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(alignment: .top, spacing: 12) {
+                            ForEach(cast.prefix(Constants.castPreviewCount)) { member in
+                                castCard(member)
+                            }
+
+                            if cast.count > Constants.castPreviewCount {
+                                NavigationLink {
+                                    FullCastView(cast: cast)
+                                } label: {
+                                    viewMoreCard
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                }
+                .padding(.bottom)
+            }
+        }
+    }
+
+    private var viewMoreCard: some View {
+        VStack {
+            Spacer()
+            HStack(spacing: 4) {
+                Text("movie.viewMore")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                Image(systemName: "arrow.right")
+                    .font(.subheadline)
+            }
+            Spacer()
+        }
+        .frame(width: Constants.castCardWidth, height: Constants.castPhotoSize)
+    }
+
+    private func castCard(_ member: CastViewData) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Color.clear
+                .frame(width: Constants.castCardWidth, height: Constants.castPhotoSize)
+                .overlay {
+                    AsyncImage(url: member.photoURL) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        default:
+                            Color(.systemGray5)
+                                .overlay {
+                                    Image(systemName: "person.fill")
+                                        .font(.title2)
+                                        .foregroundStyle(.secondary)
+                                }
+                        }
+                    }
+                }
+                .clipped()
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+            Text(member.name)
+                .font(.caption)
+                .fontWeight(.semibold)
+                .lineLimit(2)
+
+            Text(member.character)
+                .font(.caption2)
+                .lineLimit(2)
+        }
+        .frame(width: Constants.castCardWidth)
     }
 
     // MARK: - Score Circle

@@ -56,7 +56,8 @@ extension Movie {
         genres: [Genre] = [Genre(id: 28, name: "Action")],
         runtime: Int? = 120,
         tagline: String? = "A test tagline",
-        trailerYouTubeKey: String? = "abc123"
+        trailerYouTubeKey: String? = "abc123",
+        cast: [CastMember] = []
     ) -> Movie {
         Movie(
             id: id,
@@ -69,7 +70,8 @@ extension Movie {
             genres: genres,
             runtime: runtime,
             tagline: tagline,
-            trailerYouTubeKey: trailerYouTubeKey
+            trailerYouTubeKey: trailerYouTubeKey,
+            cast: cast
         )
     }
 }

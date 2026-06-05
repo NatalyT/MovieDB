@@ -10,9 +10,18 @@ import SwiftUI
 @main
 struct MovieDBApp: App {
 
+    init() {
+        let appearance = UINavigationBarAppearance()
+        appearance.backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+        UINavigationBar.appearance().tintColor = .black
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    }
+
     var body: some Scene {
         WindowGroup {
             MovieListView(viewModel: makeMovieListViewModel())
+                .tint(.black)
         }
     }
 

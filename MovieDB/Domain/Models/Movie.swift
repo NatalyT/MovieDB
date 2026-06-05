@@ -19,4 +19,12 @@ struct Movie: Equatable, Identifiable {
     let runtime: Int?
     let tagline: String?
     let trailerYouTubeKey: String?
+    let cast: [CastMember]
+}
+
+struct CastMember: Equatable, Identifiable {
+    let id: Int
+    let name: String
+    let character: String
+    let profilePath: String?
 }
