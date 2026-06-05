@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		234B8A4C2FD2B9D600C508F7 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 234B8A4B2FD2B9D600C508F7 /* Secrets.xcconfig */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		234B89CD2FCD8A7500C508F7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,11 +31,25 @@
 		234B89BF2FCD8A7200C508F7 /* MovieDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		234B89CC2FCD8A7500C508F7 /* MovieDBTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieDBTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		234B89D62FCD8A7500C508F7 /* MovieDBUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieDBUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		234B8A4B2FD2B9D600C508F7 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		234B8A4E2FD2BA8600C508F7 /* Exceptions for "MovieDB" folder in "MovieDB" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 234B89BE2FCD8A7200C508F7 /* MovieDB */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		234B89C12FCD8A7200C508F7 /* MovieDB */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				234B8A4E2FD2BA8600C508F7 /* Exceptions for "MovieDB" folder in "MovieDB" target */,
+			);
 			path = MovieDB;
 			sourceTree = "<group>";
 		};
@@ -79,6 +97,7 @@
 				234B89CF2FCD8A7500C508F7 /* MovieDBTests */,
 				234B89D92FCD8A7500C508F7 /* MovieDBUITests */,
 				234B89C02FCD8A7200C508F7 /* Products */,
+				234B8A4B2FD2B9D600C508F7 /* Secrets.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -214,6 +233,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				234B8A4C2FD2B9D600C508F7 /* Secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,6 +416,7 @@
 		};
 		234B89E12FCD8A7500C508F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 234B8A4B2FD2B9D600C508F7 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -404,6 +425,7 @@
 				DEVELOPMENT_TEAM = 9487RPB949;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MovieDB/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +450,7 @@
 		};
 		234B89E22FCD8A7500C508F7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 234B8A4B2FD2B9D600C508F7 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -436,6 +459,7 @@
 				DEVELOPMENT_TEAM = 9487RPB949;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MovieDB/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

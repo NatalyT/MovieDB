@@ -19,6 +19,9 @@ Package.resolved
 # CocoaPods (if used)
 Pods/
 
+# Secrets
+Secrets.xcconfig
+
 # Misc
 *.swp
 *.lock

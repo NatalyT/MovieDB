@@ -78,10 +78,9 @@ The current architecture allows these features to be added without major refacto
 ---
 
 ## How to Run
-1. Open `MovieDB.xcodeproj`
-2. Select an iPhone simulator (iOS 17+)
-3. Run the app (Cmd+R)
+1. Copy `Secrets.xcconfig.example` to `Secrets.xcconfig` at the project root
+2. Open `MovieDB.xcodeproj`
+3. Select an iPhone simulator (iOS 17+)
+4. Run the app (Cmd+R)
 
-No external dependencies or API key setup required. The TMDB API token is included in the project.
-
-In a production app, the API token would be stored securely (e.g., Keychain or build configuration) and excluded from version control.
+A TMDB Bearer Token is included in `Secrets.xcconfig.example` for review purposes and will be revoked after the review. The token is stored in a `.gitignore`d `.xcconfig` file and injected via Info.plist at build time.
