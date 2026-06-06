@@ -15,6 +15,7 @@ final class FakeMoviesRepository: MoviesRepository {
     var popularResult: Result<(movies: [Movie], totalPages: Int), Error> = .success(([], 1))
     var movieDetailResult: Result<Movie, Error> = .success(.stub())
     var searchResult: Result<(movies: [Movie], totalPages: Int), Error> = .success(([], 1))
+    var personDetailResult: Result<Person, Error> = .success(.stub())
 
     // MARK: - Call Tracking
 
@@ -39,6 +40,38 @@ final class FakeMoviesRepository: MoviesRepository {
         searchCallCount += 1
         lastSearchQuery = query
         return try searchResult.get()
+    }
+
+    func personDetail(id: Int) async throws -> Person {
+        return try personDetailResult.get()
+    }
+}
+
+// MARK: - Person Test Helpers
+
+extension Person {
+    static func stub(
+        id: Int = 1,
+        name: String = "Jon Bernthal",
+        biography: String = "An American actor.",
+        profilePath: String? = "/jon.jpg",
+        birthday: Date? = DateFormatter.tmdbDate.date(from: "1976-09-20"),
+        placeOfBirth: String? = "Washington, D.C., USA",
+        gender: Gender = .male,
+        knownForDepartment: String? = "Acting",
+        knownForMovies: [Movie] = []
+    ) -> Person {
+        Person(
+            id: id,
+            name: name,
+            biography: biography,
+            profilePath: profilePath,
+            birthday: birthday,
+            placeOfBirth: placeOfBirth,
+            gender: gender,
+            knownForDepartment: knownForDepartment,
+            knownForMovies: knownForMovies
+        )
     }
 }
 

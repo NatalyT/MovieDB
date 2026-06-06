@@ -9,7 +9,10 @@ The app is built entirely in SwiftUI and targets iOS 17.
 
 ## Features
 - Browse popular movies in a responsive grid layout
-- View movie details: poster, backdrop, release date, genres, runtime, user score, tagline, and overview
+- View movie details: poster, backdrop, release date, genres, runtime, user score, tagline, overview, and top billed cast
+- Browse full cast and crew list
+- View person details: photo, personal info, biography with expandable text, and known-for movies
+- Navigate between movies and people (movie -> cast member -> their movies -> ...)
 - Play movie trailers via YouTube (opens in an in-app Safari browser)
 - Search movies with debounced autocomplete suggestions
 - Falls back to local results when the API search returns empty or fails
@@ -37,7 +40,7 @@ The app follows Clean Architecture with MVVM, organized by feature:
 - **Grid layout** over List -- matches the TMDB website and is more visual.
 - **ViewState enum** (`loading`, `loaded`, `empty`, `error`) for each screen -- makes state transitions explicit and testable.
 - **Pre-formatted display types** -- ViewModels produce ready-to-render strings (e.g., "2h 28m", "75%"), keeping Views free of formatting logic.
-- **`append_to_response`** for regional release dates and videos -- single API call instead of multiple requests.
+- **`append_to_response`** for regional release dates, videos, credits, and person movie credits -- single API call instead of multiple requests.
 - **SFSafariViewController** for trailers -- YouTube embeds don't work reliably in WKWebView on iOS.
 - **API-first search with local fallback** -- avoids UI flicker from showing local results then replacing with API results.
 
@@ -54,10 +57,11 @@ Dependencies are injected via initializers. No third-party libraries are used.
 ---
 
 ## Testing
-Unit tests cover ViewModels and the search component (36 tests total):
+Unit tests cover ViewModels and the search component (65 tests total):
 
 - **MovieListViewModelTests** -- initial load, pagination, duplicate filtering, load more error, refresh, search suggestion forwarding
-- **MovieDetailViewModelTests** -- load/error/retry, formatting for year, score, runtime, genres, trailer URL, tagline
+- **MovieDetailViewModelTests** -- load/error/retry, formatting for year, score, runtime, genres, trailer URL, tagline, cast and crew mapping
+- **PersonDetailViewModelTests** -- load/error/retry, personal info formatting (gender, birthday, place of birth), biography, photo URL, known-for movies mapping and limit
 - **MovieSearchTests** -- debounce, API results, local fallback, cancel, empty/whitespace queries
 
 A `FakeMoviesRepository` with stubs and call tracking is used for all tests. Async state changes are observed via `XCTestExpectation` with Combine.

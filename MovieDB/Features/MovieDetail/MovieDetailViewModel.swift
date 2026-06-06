@@ -117,4 +117,7 @@ final class MovieDetailViewModel: ObservableObject {
         return "\(mins)m"
     }
 
+    func makePersonDetailViewModel(for personID: Int) -> PersonDetailViewModel {
+        PersonDetailViewModel(personID: personID, repository: repository)
+    }
 }

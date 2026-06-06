@@ -14,20 +14,21 @@ private enum Constants {
     static let cornerRadius: CGFloat = 10
     static let scoreSize: CGFloat = 50
     static let scoreLineWidth: CGFloat = 4
-    static let castPhotoSize: CGFloat = 100
+    static let castPhotoHeight: CGFloat = 150
     static let castCardWidth: CGFloat = 120
+    static let castTextHeight: CGFloat = 70
     static let castPreviewCount = 9
 }
 
 struct MovieDetailView: View {
-
+    
     @StateObject private var viewModel: MovieDetailViewModel
     @State private var showTrailer = false
-
+    
     init(viewModel: MovieDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
-
+    
     var body: some View {
         content
             .navigationTitle("")
@@ -36,16 +37,16 @@ struct MovieDetailView: View {
                 viewModel.load()
             }
     }
-
+    
     // MARK: - Content
-
+    
     @ViewBuilder
     private var content: some View {
         switch viewModel.state {
         case .loading:
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-
+            
         case .loaded(let data):
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
@@ -61,16 +62,16 @@ struct MovieDetailView: View {
                         .ignoresSafeArea()
                 }
             }
-
+            
         case .error(let message):
             ErrorStateView(message: message) {
                 viewModel.retry()
             }
         }
     }
-
+    
     // MARK: - Backdrop
-
+    
     private func backdropImage(url: URL?) -> some View {
         Color.clear
             .aspectRatio(Constants.backdropAspectRatio, contentMode: .fit)
@@ -88,9 +89,9 @@ struct MovieDetailView: View {
             }
             .clipped()
     }
-
+    
     // MARK: - Trailer
-
+    
     private var playTrailerButton: some View {
         Button {
             showTrailer = true
@@ -101,29 +102,29 @@ struct MovieDetailView: View {
                 .foregroundStyle(.black)
         }
     }
-
+    
     // MARK: - Poster + Title
-
+    
     private func posterAndTitleSection(data: MovieDetailLoadedState) -> some View {
         HStack(alignment: .top, spacing: 16) {
             posterImage(url: data.posterURL)
-
+            
             VStack(alignment: .leading, spacing: 8) {
                 titleView(title: data.title, year: data.yearText)
-
+                
                 Text(data.releaseDateText)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-
+                
                 metadataLine(data: data)
-
+                
                 HStack(spacing: 8) {
                     scoreCircle(percent: data.scorePercent, text: data.scoreText)
                     Text("movie.userScore")
                         .font(.caption)
                         .fontWeight(.semibold)
                 }
-
+                
                 if data.trailerURL != nil {
                     playTrailerButton
                 }
@@ -131,7 +132,7 @@ struct MovieDetailView: View {
         }
         .padding()
     }
-
+    
     private func titleView(title: String, year: String) -> some View {
         Group {
             if year.isEmpty {
@@ -148,7 +149,7 @@ struct MovieDetailView: View {
             }
         }
     }
-
+    
     private func metadataLine(data: MovieDetailLoadedState) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             if !data.genresText.isEmpty {
@@ -156,7 +157,7 @@ struct MovieDetailView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-
+            
             if let runtime = data.runtimeText {
                 Text(runtime)
                     .font(.caption)
@@ -164,7 +165,7 @@ struct MovieDetailView: View {
             }
         }
     }
-
+    
     private func posterImage(url: URL?) -> some View {
         Color.clear
             .aspectRatio(Constants.posterAspectRatio, contentMode: .fit)
@@ -190,9 +191,9 @@ struct MovieDetailView: View {
             .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
             .shadow(radius: 4)
     }
-
+    
     // MARK: - Details section
-
+    
     private func detailsSection(data: MovieDetailLoadedState) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             // Tagline
@@ -202,7 +203,7 @@ struct MovieDetailView: View {
                     .foregroundStyle(.secondary)
                     .italic()
             }
-
+            
             // Overview
             if !data.overview.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
@@ -216,9 +217,9 @@ struct MovieDetailView: View {
         .padding(.horizontal)
         .padding(.bottom)
     }
-
+    
     // MARK: - Cast
-
+    
     private func castSection(cast: [CastViewData], crew: [CrewViewData]) -> some View {
         Group {
             if !cast.isEmpty {
@@ -226,24 +227,40 @@ struct MovieDetailView: View {
                     Text("movie.topBilledCast")
                         .font(.headline)
                         .padding(.horizontal)
-
+                    
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(alignment: .top, spacing: 12) {
                             ForEach(cast.prefix(Constants.castPreviewCount)) { member in
-                                castCard(member)
+                                NavigationLink {
+                                    PersonDetailView(
+                                        viewModel: viewModel.makePersonDetailViewModel(for: member.id)
+                                    )
+                                } label: {
+                                    castCard(member)
+                                }
+                                .buttonStyle(.plain)
                             }
-
+                            
                             NavigationLink {
-                                FullCastView(cast: cast, crew: crew)
+                                FullCastView(
+                                    cast: cast,
+                                    crew: crew,
+                                    makePersonDetailViewModel: viewModel.makePersonDetailViewModel
+                                )
                             } label: {
                                 viewMoreCard
                             }
                             .buttonStyle(.plain)
                         }
                         .padding(.horizontal)
+                        .padding(.bottom, 8)
                     }
                     NavigationLink {
-                        FullCastView(cast: cast, crew: crew)
+                        FullCastView(
+                            cast: cast,
+                            crew: crew,
+                            makePersonDetailViewModel: viewModel.makePersonDetailViewModel
+                        )
                     } label: {
                         Text("movie.fullCastCrew")
                             .font(.subheadline)
@@ -257,7 +274,7 @@ struct MovieDetailView: View {
             }
         }
     }
-
+    
     private var viewMoreCard: some View {
         VStack {
             Spacer()
@@ -270,14 +287,14 @@ struct MovieDetailView: View {
             }
             Spacer()
         }
-        .frame(width: Constants.castCardWidth, height: Constants.castPhotoSize)
+        .frame(width: Constants.castCardWidth, height: Constants.castPhotoHeight)
     }
-
+    
     private func castCard(_ member: CastViewData) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 0) {
             Color.clear
-                .frame(width: Constants.castCardWidth, height: Constants.castPhotoSize)
-                .overlay {
+                .frame(width: Constants.castCardWidth, height: Constants.castPhotoHeight)
+                .overlay(alignment: .top) {
                     AsyncImage(url: member.photoURL) { phase in
                         switch phase {
                         case .success(let image):
@@ -295,29 +312,44 @@ struct MovieDetailView: View {
                     }
                 }
                 .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-
-            Text(member.name)
-                .font(.caption)
-                .fontWeight(.semibold)
-                .lineLimit(2)
-
-            Text(member.character)
-                .font(.caption2)
-                .lineLimit(2)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(member.name)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .lineLimit(2)
+                
+                Text(member.character)
+                    .font(.caption2)
+                    .lineLimit(2)
+            }
+            .padding(8)
+            .frame(width: Constants.castCardWidth, height: Constants.castTextHeight, alignment: .topLeading)
         }
         .frame(width: Constants.castCardWidth)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color(.systemGray4), lineWidth: 0.5)
+        }
+        .shadow(
+            color: .black.opacity(0.14),
+            radius: 4,
+            x: 0,
+            y: 2
+        )
     }
-
+    
     // MARK: - Score Circle
-
+    
     private func scoreCircle(percent: Int, text: String) -> some View {
         let progress = Double(percent) / 100.0
-
+        
         return ZStack {
             Circle()
                 .stroke(Color(.systemGray5), lineWidth: Constants.scoreLineWidth)
-
+            
             Circle()
                 .trim(from: 0, to: progress)
                 .stroke(
@@ -325,14 +357,14 @@ struct MovieDetailView: View {
                     style: StrokeStyle(lineWidth: Constants.scoreLineWidth, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
-
+            
             Text(text)
                 .font(.caption2)
                 .fontWeight(.bold)
         }
         .frame(width: Constants.scoreSize, height: Constants.scoreSize)
     }
-
+    
     private func scoreColor(percent: Int) -> Color {
         switch percent {
         case 70...:

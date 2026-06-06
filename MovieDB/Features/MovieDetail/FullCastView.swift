@@ -16,6 +16,7 @@ struct FullCastView: View {
 
     let cast: [CastViewData]
     let crew: [CrewViewData]
+    let makePersonDetailViewModel: (Int) -> PersonDetailViewModel
 
     var body: some View {
         ScrollView {
@@ -24,16 +25,12 @@ struct FullCastView: View {
                 sectionHeader(title: "movie.cast", count: cast.count)
 
                 ForEach(cast) { member in
-                    HStack(spacing: 16) {
-                        profilePhoto(url: member.photoURL)
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(member.name)
-                                .font(.headline)
-                            Text(member.character)
-                                .font(.subheadline)
-                        }
+                    NavigationLink {
+                        PersonDetailView(viewModel: makePersonDetailViewModel(member.id))
+                    } label: {
+                        personRow(name: member.name, subtitle: member.character, photoURL: member.photoURL)
                     }
+                    .buttonStyle(.plain)
                 }
 
                 // MARK: - Crew
@@ -44,16 +41,12 @@ struct FullCastView: View {
                     sectionHeader(title: "movie.crew", count: crew.count)
 
                     ForEach(crew) { member in
-                        HStack(spacing: 16) {
-                            profilePhoto(url: member.photoURL)
-
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(member.name)
-                                    .font(.headline)
-                                Text(member.job)
-                                    .font(.subheadline)
-                            }
+                        NavigationLink {
+                            PersonDetailView(viewModel: makePersonDetailViewModel(member.id))
+                        } label: {
+                            personRow(name: member.name, subtitle: member.job, photoURL: member.photoURL)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -74,6 +67,19 @@ struct FullCastView: View {
                 .foregroundStyle(.secondary)
         }
         .padding(.bottom, 4)
+    }
+
+    private func personRow(name: String, subtitle: String, photoURL: URL?) -> some View {
+        HStack(spacing: 16) {
+            profilePhoto(url: photoURL)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(name)
+                    .font(.headline)
+                Text(subtitle)
+                    .font(.subheadline)
+            }
+        }
     }
 
     private func profilePhoto(url: URL?) -> some View {

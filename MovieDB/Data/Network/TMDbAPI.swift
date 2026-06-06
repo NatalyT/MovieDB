@@ -69,6 +69,15 @@ final class TMDbAPIClient: MoviesRepository {
         return (movies: movies, totalPages: dto.totalPages)
     }
 
+    func personDetail(id: Int) async throws -> Person {
+        let url = try makeURL(path: "/person/\(id)", queryItems: [
+            URLQueryItem(name: "append_to_response", value: "movie_credits")
+        ])
+        let dto: TMDbPersonDTO = try await fetchAndDecode(url: url)
+
+        return dto.toDomainModel()
+    }
+
     // MARK: - Private
 
     private func makeURL(path: String, queryItems: [URLQueryItem] = []) throws -> URL {
