@@ -1,7 +1,7 @@
 # MovieDB
 
 ## Overview
-MovieDB is an iOS app that browses popular movies using The Movie Database (TMDB) API. Users can scroll through a grid of popular movies, view detailed information, search for movies with autocomplete suggestions, and play trailers.
+MovieDB is an iOS app that browses popular movies using The Movie Database (TMDB) API. Users can scroll through a grid of popular movies, view detailed information including cast and crew, explore actor profiles, search for movies with autocomplete suggestions, and play trailers.
 
 The app is built entirely in SwiftUI and targets iOS 17.
 
@@ -71,6 +71,7 @@ A `FakeMoviesRepository` with stubs and call tracking is used for all tests. Asy
 ## Limitations & Possible Improvements
 Due to time constraints, some features were intentionally left out:
 
+- YouTube trailer playback requires a physical device (the iOS Simulator lacks the media codecs needed by YouTube's web player)
 - Image caching and retry (`AsyncImage` doesn't retry on failure or provide caching control)
 - Segmented control for Now Playing / Popular / Upcoming
 - Search result pagination
