@@ -13,7 +13,7 @@ struct MovieDBApp: App {
     init() {
         let appearance = UINavigationBarAppearance()
         appearance.backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-        UINavigationBar.appearance().tintColor = .black
+        UINavigationBar.appearance().tintColor = .label
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
@@ -21,7 +21,7 @@ struct MovieDBApp: App {
     var body: some Scene {
         WindowGroup {
             MovieListView(viewModel: makeMovieListViewModel())
-                .tint(.black)
+                .tint(.primary)
         }
     }
 

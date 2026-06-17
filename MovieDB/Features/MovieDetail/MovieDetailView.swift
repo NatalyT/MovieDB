@@ -99,7 +99,7 @@ struct MovieDetailView: View {
             Label("movie.playTrailer", systemImage: "play.fill")
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.black)
+                .foregroundStyle(.primary)
         }
     }
     
