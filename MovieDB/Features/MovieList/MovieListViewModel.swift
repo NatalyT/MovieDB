@@ -24,6 +24,7 @@ final class MovieListViewModel: ObservableObject {
 
     // MARK: - Private Properties
 
+    private let getPopularMovies: GetPopularMoviesUseCase
     private let repository: MoviesRepository
     private lazy var search: MovieSearch = {
         let search = MovieSearch(
@@ -45,7 +46,8 @@ final class MovieListViewModel: ObservableObject {
 
     // MARK: - Init
 
-    init(repository: MoviesRepository) {
+    init(getPopularMovies: GetPopularMoviesUseCase, repository: MoviesRepository) {
+        self.getPopularMovies = getPopularMovies
         self.repository = repository
     }
 
@@ -97,7 +99,7 @@ final class MovieListViewModel: ObservableObject {
 
         Task {
             do {
-                let result = try await repository.popular(page: page)
+                let result = try await getPopularMovies.execute(page: page)
                 let existingIDs = Set(items.map(\.id))
                 let newItems = result.movies
                     .filter { !existingIDs.contains($0.id) }
