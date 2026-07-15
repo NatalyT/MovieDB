@@ -25,10 +25,11 @@ final class MovieListViewModel: ObservableObject {
     // MARK: - Private Properties
 
     private let getPopularMovies: GetPopularMoviesUseCase
+    private let searchMovies: SearchMoviesUseCase
     private let repository: MoviesRepository
     private lazy var search: MovieSearch = {
         let search = MovieSearch(
-            repository: repository,
+            searchMovies: searchMovies,
             localItems: { [weak self] in self?.items ?? [] }
         )
         search.onSuggestionsChanged = { [weak self] suggestions, noResults in
@@ -46,8 +47,9 @@ final class MovieListViewModel: ObservableObject {
 
     // MARK: - Init
 
-    init(getPopularMovies: GetPopularMoviesUseCase, repository: MoviesRepository) {
+    init(getPopularMovies: GetPopularMoviesUseCase, searchMovies: SearchMoviesUseCase, repository: MoviesRepository) {
         self.getPopularMovies = getPopularMovies
+        self.searchMovies = searchMovies
         self.repository = repository
     }
 

@@ -21,14 +21,14 @@ final class MovieSearch {
 
     // MARK: - Private Properties
 
-    private let repository: MoviesRepository
+    private let searchMovies: SearchMoviesUseCase
     private let localItems: () -> [MovieCardViewData]
     private var searchTask: Task<Void, Never>?
 
     // MARK: - Init
 
-    init(repository: MoviesRepository, localItems: @escaping () -> [MovieCardViewData]) {
-        self.repository = repository
+    init(searchMovies: SearchMoviesUseCase, localItems: @escaping () -> [MovieCardViewData]) {
+        self.searchMovies = searchMovies
         self.localItems = localItems
     }
 
@@ -61,7 +61,7 @@ final class MovieSearch {
             guard !Task.isCancelled else { return }
 
             do {
-                let result = try await repository.search(query: query, page: 1)
+                let result = try await searchMovies.execute(query: query, page: 1)
                 guard !Task.isCancelled else { return }
 
                 let apiSuggestions = result.movies.map { mapToSuggestion($0) }

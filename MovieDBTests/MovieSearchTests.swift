@@ -16,8 +16,9 @@ final class MovieSearchTests: XCTestCase {
 
     override func setUp() {
         repository = FakeMoviesRepository()
+        let searchMovies = DefaultSearchMoviesUseCase(repository: repository)
         sut = MovieSearch(
-            repository: repository,
+            searchMovies: searchMovies,
             localItems: { [] }
         )
     }
@@ -95,8 +96,9 @@ final class MovieSearchTests: XCTestCase {
         let localItems = [
             MovieCardViewData(id: 1, title: "Batman", releaseDateText: "2026", posterURL: nil)
         ]
+        let searchMovies = DefaultSearchMoviesUseCase(repository: repository)
         sut = MovieSearch(
-            repository: repository,
+            searchMovies: searchMovies,
             localItems: { localItems }
         )
 
@@ -135,8 +137,9 @@ final class MovieSearchTests: XCTestCase {
         let localItems = [
             MovieCardViewData(id: 1, title: "Spider-Man", releaseDateText: "2026", posterURL: nil)
         ]
+        let searchMovies = DefaultSearchMoviesUseCase(repository: repository)
         sut = MovieSearch(
-            repository: repository,
+            searchMovies: searchMovies,
             localItems: { localItems }
         )
 

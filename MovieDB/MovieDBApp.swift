@@ -34,6 +34,7 @@ struct MovieDBApp: App {
         let http = URLSessionHTTPClient()
         let api = TMDbAPIClient(http: http, bearerToken: token)
         let getPopularMovies = DefaultGetPopularMoviesUseCase(repository: api)
-        return MovieListViewModel(getPopularMovies: getPopularMovies, repository: api)
+        let searchMovies = DefaultSearchMoviesUseCase(repository: api)
+        return MovieListViewModel(getPopularMovies: getPopularMovies, searchMovies: searchMovies, repository: api)
     }
 }
