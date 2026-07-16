@@ -12,24 +12,28 @@ private enum Constants {
     static let minimumSearchLength = 1
 }
 
+protocol MovieSearching {
+    var onResultsChanged: (([Movie]) -> Void)? { get set }
+    func search(query: String)
+    func cancel()
+}
+
 @MainActor
-final class MovieSearch {
+final class MovieSearch: MovieSearching {
 
     // MARK: - Callbacks
 
-    var onSuggestionsChanged: (([MovieSuggestion], Bool) -> Void)?
+    var onResultsChanged: (([Movie]) -> Void)?
 
     // MARK: - Private Properties
 
     private let searchMovies: SearchMoviesUseCase
-    private let localItems: () -> [MovieCardViewData]
     private var searchTask: Task<Void, Never>?
 
     // MARK: - Init
 
-    init(searchMovies: SearchMoviesUseCase, localItems: @escaping () -> [MovieCardViewData]) {
+    init(searchMovies: SearchMoviesUseCase) {
         self.searchMovies = searchMovies
-        self.localItems = localItems
     }
 
     // MARK: - Search
@@ -39,7 +43,7 @@ final class MovieSearch {
 
         guard !trimmed.isEmpty, trimmed.count >= Constants.minimumSearchLength else {
             cancel()
-            onSuggestionsChanged?([], false)
+            onResultsChanged?([])
             return
         }
 
@@ -63,30 +67,10 @@ final class MovieSearch {
             do {
                 let result = try await searchMovies.execute(query: query, page: 1)
                 guard !Task.isCancelled else { return }
-
-                let apiSuggestions = result.movies.map { mapToSuggestion($0) }
-
-                if apiSuggestions.isEmpty {
-                    let local = localSuggestions(for: query)
-                    onSuggestionsChanged?(local, local.isEmpty)
-                } else {
-                    onSuggestionsChanged?(apiSuggestions, false)
-                }
+                onResultsChanged?(result.movies)
             } catch {
-                let local = localSuggestions(for: query)
-                onSuggestionsChanged?(local, local.isEmpty)
+                onResultsChanged?([])
             }
         }
-    }
-
-    private func localSuggestions(for query: String) -> [MovieSuggestion] {
-        localItems()
-            .filter { $0.title.localizedCaseInsensitiveContains(query) }
-            .map { MovieSuggestion(id: $0.id, title: $0.title, releaseDateText: $0.releaseDateText) }
-    }
-
-    private func mapToSuggestion(_ movie: Movie) -> MovieSuggestion {
-        let dateText = DateFormatter.displayString(from: movie.releaseDate)
-        return MovieSuggestion(id: movie.id, title: movie.title, releaseDateText: dateText)
     }
 }

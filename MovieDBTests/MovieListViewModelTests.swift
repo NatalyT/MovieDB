@@ -20,7 +20,8 @@ final class MovieListViewModelTests: XCTestCase {
         repository = FakeMoviesRepository()
         let getPopularMovies = DefaultGetPopularMoviesUseCase(repository: repository)
         let searchMovies = DefaultSearchMoviesUseCase(repository: repository)
-        sut = MovieListViewModel(getPopularMovies: getPopularMovies, searchMovies: searchMovies, repository: repository)
+        let search = MovieSearch(searchMovies: searchMovies)
+        sut = MovieListViewModel(getPopularMovies: getPopularMovies, search: search, repository: repository)
         cancellables = []
     }
 

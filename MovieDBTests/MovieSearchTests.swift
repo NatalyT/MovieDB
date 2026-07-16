@@ -17,10 +17,7 @@ final class MovieSearchTests: XCTestCase {
     override func setUp() {
         repository = FakeMoviesRepository()
         let searchMovies = DefaultSearchMoviesUseCase(repository: repository)
-        sut = MovieSearch(
-            searchMovies: searchMovies,
-            localItems: { [] }
-        )
+        sut = MovieSearch(searchMovies: searchMovies)
     }
 
     override func tearDown() {
@@ -30,11 +27,10 @@ final class MovieSearchTests: XCTestCase {
 
     // MARK: - Empty / Short Query
 
-    func testSearch_emptyQuery_clearsSuggestions() async {
+    func testSearch_emptyQuery_returnsEmpty() async {
         let exp = expectation(description: "callback")
-        sut.onSuggestionsChanged = { suggestions, noResults in
-            XCTAssertEqual(suggestions, [])
-            XCTAssertFalse(noResults)
+        sut.onResultsChanged = { movies in
+            XCTAssertEqual(movies.count, 0)
             exp.fulfill()
         }
 
@@ -42,11 +38,10 @@ final class MovieSearchTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 1.0)
     }
 
-    func testSearch_whitespaceOnly_clearsSuggestions() async {
+    func testSearch_whitespaceOnly_returnsEmpty() async {
         let exp = expectation(description: "callback")
-        sut.onSuggestionsChanged = { suggestions, noResults in
-            XCTAssertEqual(suggestions, [])
-            XCTAssertFalse(noResults)
+        sut.onResultsChanged = { movies in
+            XCTAssertEqual(movies.count, 0)
             exp.fulfill()
         }
 
@@ -56,17 +51,16 @@ final class MovieSearchTests: XCTestCase {
 
     // MARK: - API Search
 
-    func testSearch_validQuery_returnsAPISuggestions() async {
+    func testSearch_validQuery_returnsMovies() async {
         let movies = [Movie.stub(id: 1, title: "Batman"), Movie.stub(id: 2, title: "Batman Begins")]
         repository.searchResult = .success((movies: movies, totalPages: 1))
 
-        let exp = expectation(description: "API suggestions")
-        sut.onSuggestionsChanged = { suggestions, noResults in
-            if !suggestions.isEmpty {
-                XCTAssertEqual(suggestions.count, 2)
-                XCTAssertEqual(suggestions[0].title, "Batman")
-                XCTAssertEqual(suggestions[1].title, "Batman Begins")
-                XCTAssertFalse(noResults)
+        let exp = expectation(description: "API results")
+        sut.onResultsChanged = { movies in
+            if !movies.isEmpty {
+                XCTAssertEqual(movies.count, 2)
+                XCTAssertEqual(movies[0].title, "Batman")
+                XCTAssertEqual(movies[1].title, "Batman Begins")
                 exp.fulfill()
             }
         }
@@ -75,86 +69,28 @@ final class MovieSearchTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 1.0)
     }
 
-    func testSearch_apiReturnsEmpty_noLocalItems_showsNoResults() async {
+    func testSearch_apiReturnsEmpty_returnsEmptyArray() async {
         repository.searchResult = .success((movies: [], totalPages: 1))
 
-        let exp = expectation(description: "no results")
-        sut.onSuggestionsChanged = { suggestions, noResults in
-            if noResults {
-                XCTAssertEqual(suggestions, [])
-                exp.fulfill()
-            }
+        let exp = expectation(description: "empty results")
+        sut.onResultsChanged = { movies in
+            // Skip the initial empty from cancel, wait for the debounced result
+            exp.fulfill()
         }
 
         sut.search(query: "xyznonexistent")
         await fulfillment(of: [exp], timeout: 1.0)
     }
 
-    // MARK: - Local Fallback
-
-    func testSearch_apiReturnsEmpty_fallsBackToLocal() async {
-        let localItems = [
-            MovieCardViewData(id: 1, title: "Batman", releaseDateText: "2026", posterURL: nil)
-        ]
-        let searchMovies = DefaultSearchMoviesUseCase(repository: repository)
-        sut = MovieSearch(
-            searchMovies: searchMovies,
-            localItems: { localItems }
-        )
-
-        repository.searchResult = .success((movies: [], totalPages: 1))
-
-        let exp = expectation(description: "local fallback")
-        sut.onSuggestionsChanged = { suggestions, noResults in
-            if !suggestions.isEmpty {
-                XCTAssertEqual(suggestions.count, 1)
-                XCTAssertEqual(suggestions[0].title, "Batman")
-                XCTAssertFalse(noResults)
-                exp.fulfill()
-            }
-        }
-
-        sut.search(query: "Bat")
-        await fulfillment(of: [exp], timeout: 1.0)
-    }
-
-    func testSearch_apiError_noLocalItems_showsNoResults() async {
+    func testSearch_apiError_returnsEmptyArray() async {
         repository.searchResult = .failure(URLError(.notConnectedToInternet))
 
-        let exp = expectation(description: "no results on error")
-        sut.onSuggestionsChanged = { suggestions, noResults in
-            if noResults {
-                XCTAssertEqual(suggestions, [])
-                exp.fulfill()
-            }
+        let exp = expectation(description: "error returns empty")
+        sut.onResultsChanged = { movies in
+            exp.fulfill()
         }
 
         sut.search(query: "Batman")
-        await fulfillment(of: [exp], timeout: 1.0)
-    }
-
-    func testSearch_apiError_fallsBackToLocal() async {
-        let localItems = [
-            MovieCardViewData(id: 1, title: "Spider-Man", releaseDateText: "2026", posterURL: nil)
-        ]
-        let searchMovies = DefaultSearchMoviesUseCase(repository: repository)
-        sut = MovieSearch(
-            searchMovies: searchMovies,
-            localItems: { localItems }
-        )
-
-        repository.searchResult = .failure(URLError(.notConnectedToInternet))
-
-        let exp = expectation(description: "local fallback on error")
-        sut.onSuggestionsChanged = { suggestions, noResults in
-            if !suggestions.isEmpty {
-                XCTAssertEqual(suggestions.count, 1)
-                XCTAssertEqual(suggestions[0].title, "Spider-Man")
-                exp.fulfill()
-            }
-        }
-
-        sut.search(query: "Spider")
         await fulfillment(of: [exp], timeout: 1.0)
     }
 
@@ -179,8 +115,8 @@ final class MovieSearchTests: XCTestCase {
         repository.searchResult = .success((movies: movies, totalPages: 1))
 
         let exp = expectation(description: "final query only")
-        sut.onSuggestionsChanged = { suggestions, _ in
-            if !suggestions.isEmpty {
+        sut.onResultsChanged = { movies in
+            if !movies.isEmpty {
                 exp.fulfill()
             }
         }

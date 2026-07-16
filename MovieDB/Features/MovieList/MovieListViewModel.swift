@@ -25,19 +25,8 @@ final class MovieListViewModel: ObservableObject {
     // MARK: - Private Properties
 
     private let getPopularMovies: GetPopularMoviesUseCase
-    private let searchMovies: SearchMoviesUseCase
     private let repository: MoviesRepository
-    private lazy var search: MovieSearch = {
-        let search = MovieSearch(
-            searchMovies: searchMovies,
-            localItems: { [weak self] in self?.items ?? [] }
-        )
-        search.onSuggestionsChanged = { [weak self] suggestions, noResults in
-            self?.suggestions = suggestions
-            self?.showNoResults = noResults
-        }
-        return search
-    }()
+    private var search: MovieSearching
     private var items: [MovieCardViewData] = []
     private var page = 1
     private var totalPages = 1
@@ -47,10 +36,14 @@ final class MovieListViewModel: ObservableObject {
 
     // MARK: - Init
 
-    init(getPopularMovies: GetPopularMoviesUseCase, searchMovies: SearchMoviesUseCase, repository: MoviesRepository) {
+    init(getPopularMovies: GetPopularMoviesUseCase, search: MovieSearching, repository: MoviesRepository) {
         self.getPopularMovies = getPopularMovies
-        self.searchMovies = searchMovies
+        self.search = search
         self.repository = repository
+
+        self.search.onResultsChanged = { [weak self] movies in
+            self?.handleSearchResults(movies)
+        }
     }
 
     // MARK: - Popular Movies
@@ -150,6 +143,30 @@ final class MovieListViewModel: ObservableObject {
 
     func searchQueryChanged() {
         search.search(query: searchQuery)
+    }
+
+    private func handleSearchResults(_ movies: [Movie]) {
+        if movies.isEmpty {
+            let local = localSuggestions(for: searchQuery)
+            suggestions = local
+            showNoResults = local.isEmpty && !searchQuery.trimmingCharacters(in: .whitespaces).isEmpty
+        } else {
+            suggestions = movies.map { mapToSuggestion($0) }
+            showNoResults = false
+        }
+    }
+
+    private func localSuggestions(for query: String) -> [MovieSuggestion] {
+        let trimmed = query.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return [] }
+        return items
+            .filter { $0.title.localizedCaseInsensitiveContains(trimmed) }
+            .map { MovieSuggestion(id: $0.id, title: $0.title, releaseDateText: $0.releaseDateText) }
+    }
+
+    private func mapToSuggestion(_ movie: Movie) -> MovieSuggestion {
+        let dateText = DateFormatter.displayString(from: movie.releaseDate)
+        return MovieSuggestion(id: movie.id, title: movie.title, releaseDateText: dateText)
     }
 
     // MARK: - Detail
