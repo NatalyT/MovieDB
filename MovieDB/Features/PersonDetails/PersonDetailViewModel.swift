@@ -18,10 +18,12 @@ final class PersonDetailViewModel: ObservableObject {
     @Published private(set) var state: PersonDetailViewState = .loading
 
     private let personID: Int
+    private let getPersonDetail: GetPersonDetailUseCase
     private let repository: MoviesRepository
 
-    init(personID: Int, repository: MoviesRepository) {
+    init(personID: Int, getPersonDetail: GetPersonDetailUseCase, repository: MoviesRepository) {
         self.personID = personID
+        self.getPersonDetail = getPersonDetail
         self.repository = repository
     }
 
@@ -32,7 +34,7 @@ final class PersonDetailViewModel: ObservableObject {
 
         Task {
             do {
-                let person = try await repository.personDetail(id: personID)
+                let person = try await getPersonDetail.execute(id: personID)
                 state = .loaded(mapToViewData(person))
             } catch {
                 state = .error(ErrorMapping.mapToAlert(error))

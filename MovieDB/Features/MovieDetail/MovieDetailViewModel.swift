@@ -120,6 +120,6 @@ final class MovieDetailViewModel: ObservableObject {
     }
 
     func makePersonDetailViewModel(for personID: Int) -> PersonDetailViewModel {
-        PersonDetailViewModel(personID: personID, repository: repository)
+        PersonDetailViewModel(personID: personID, getPersonDetail: DefaultGetPersonDetailUseCase(repository: repository), repository: repository)
     }
 }
