@@ -155,6 +155,6 @@ final class MovieListViewModel: ObservableObject {
     // MARK: - Detail
 
     func makeDetailViewModel(for movieID: Int) -> MovieDetailViewModel {
-        MovieDetailViewModel(movieID: movieID, repository: repository)
+        MovieDetailViewModel(movieID: movieID, getMovieDetail: DefaultGetMovieDetailUseCase(repository: repository), repository: repository)
     }
 }

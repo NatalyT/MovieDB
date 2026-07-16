@@ -18,10 +18,12 @@ final class MovieDetailViewModel: ObservableObject {
     @Published private(set) var state: MovieDetailViewState = .loading
 
     private let movieID: Int
+    private let getMovieDetail: GetMovieDetailUseCase
     private let repository: MoviesRepository
 
-    init(movieID: Int, repository: MoviesRepository) {
+    init(movieID: Int, getMovieDetail: GetMovieDetailUseCase, repository: MoviesRepository) {
         self.movieID = movieID
+        self.getMovieDetail = getMovieDetail
         self.repository = repository
     }
 
@@ -32,7 +34,7 @@ final class MovieDetailViewModel: ObservableObject {
 
         Task {
             do {
-                let movie = try await repository.movieDetail(id: movieID)
+                let movie = try await getMovieDetail.execute(id: movieID)
                 state = .loaded(mapToViewData(movie))
             } catch {
                 state = .error(ErrorMapping.mapToAlert(error))

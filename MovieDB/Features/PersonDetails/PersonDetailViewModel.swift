@@ -47,7 +47,7 @@ final class PersonDetailViewModel: ObservableObject {
     // MARK: - Detail Factory
 
     func makeDetailViewModel(for movieID: Int) -> MovieDetailViewModel {
-        MovieDetailViewModel(movieID: movieID, repository: repository)
+        MovieDetailViewModel(movieID: movieID, getMovieDetail: DefaultGetMovieDetailUseCase(repository: repository), repository: repository)
     }
 
     // MARK: - Private
