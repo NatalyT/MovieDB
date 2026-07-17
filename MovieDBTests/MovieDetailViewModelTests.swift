@@ -19,7 +19,7 @@ final class MovieDetailViewModelTests: XCTestCase {
     override func setUp() {
         repository = FakeMoviesRepository()
         let getMovieDetail = DefaultGetMovieDetailUseCase(repository: repository)
-        sut = MovieDetailViewModel(movieID: 1, getMovieDetail: getMovieDetail, repository: repository)
+        sut = MovieDetailViewModel(movieID: 1, getMovieDetail: getMovieDetail)
         cancellables = []
     }
 

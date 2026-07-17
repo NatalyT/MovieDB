@@ -25,7 +25,6 @@ final class MovieListViewModel: ObservableObject {
     // MARK: - Private Properties
 
     private let getPopularMovies: GetPopularMoviesUseCase
-    private let repository: MoviesRepository
     private var search: MovieSearching
     private var items: [MovieCardViewData] = []
     private var page = 1
@@ -36,10 +35,9 @@ final class MovieListViewModel: ObservableObject {
 
     // MARK: - Init
 
-    init(getPopularMovies: GetPopularMoviesUseCase, search: MovieSearching, repository: MoviesRepository) {
+    init(getPopularMovies: GetPopularMoviesUseCase, search: MovieSearching) {
         self.getPopularMovies = getPopularMovies
         self.search = search
-        self.repository = repository
 
         self.search.onResultsChanged = { [weak self] movies in
             self?.handleSearchResults(movies)
@@ -169,9 +167,4 @@ final class MovieListViewModel: ObservableObject {
         return MovieSuggestion(id: movie.id, title: movie.title, releaseDateText: dateText)
     }
 
-    // MARK: - Detail
-
-    func makeDetailViewModel(for movieID: Int) -> MovieDetailViewModel {
-        MovieDetailViewModel(movieID: movieID, getMovieDetail: DefaultGetMovieDetailUseCase(repository: repository), repository: repository)
-    }
 }

@@ -18,24 +18,13 @@ struct MovieDBApp: App {
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
 
+    @StateObject private var factory = ViewModelFactory.create()
+
     var body: some Scene {
         WindowGroup {
-            MovieListView(viewModel: makeMovieListViewModel())
+            MovieListView(viewModel: factory.makeMovieListViewModel())
+                .environmentObject(factory)
                 .tint(.primary)
         }
-    }
-
-    private func makeMovieListViewModel() -> MovieListViewModel {
-        guard let token = Bundle.main.object(forInfoDictionaryKey: "TMDBBearerToken") as? String,
-              !token.isEmpty else {
-            fatalError("Missing TMDB Bearer Token. See README for setup instructions.")
-        }
-
-        let http = URLSessionHTTPClient()
-        let api = TMDbAPIClient(http: http, bearerToken: token)
-        let getPopularMovies = DefaultGetPopularMoviesUseCase(repository: api)
-        let searchMovies = DefaultSearchMoviesUseCase(repository: api)
-        let search = MovieSearch(searchMovies: searchMovies)
-        return MovieListViewModel(getPopularMovies: getPopularMovies, search: search, repository: api)
     }
 }

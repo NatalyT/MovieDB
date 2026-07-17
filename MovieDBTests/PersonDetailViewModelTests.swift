@@ -19,7 +19,7 @@ final class PersonDetailViewModelTests: XCTestCase {
     override func setUp() {
         repository = FakeMoviesRepository()
         let getPersonDetail = DefaultGetPersonDetailUseCase(repository: repository)
-        sut = PersonDetailViewModel(personID: 1, getPersonDetail: getPersonDetail, repository: repository)
+        sut = PersonDetailViewModel(personID: 1, getPersonDetail: getPersonDetail)
         cancellables = []
     }
 

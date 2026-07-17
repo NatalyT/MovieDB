@@ -19,12 +19,10 @@ final class MovieDetailViewModel: ObservableObject {
 
     private let movieID: Int
     private let getMovieDetail: GetMovieDetailUseCase
-    private let repository: MoviesRepository
 
-    init(movieID: Int, getMovieDetail: GetMovieDetailUseCase, repository: MoviesRepository) {
+    init(movieID: Int, getMovieDetail: GetMovieDetailUseCase) {
         self.movieID = movieID
         self.getMovieDetail = getMovieDetail
-        self.repository = repository
     }
 
     // MARK: - Loading
@@ -119,7 +117,4 @@ final class MovieDetailViewModel: ObservableObject {
         return "\(mins)m"
     }
 
-    func makePersonDetailViewModel(for personID: Int) -> PersonDetailViewModel {
-        PersonDetailViewModel(personID: personID, getPersonDetail: DefaultGetPersonDetailUseCase(repository: repository), repository: repository)
-    }
 }

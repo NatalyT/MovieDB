@@ -19,6 +19,7 @@ private enum Constants {
 struct PersonDetailView: View {
 
     @StateObject private var viewModel: PersonDetailViewModel
+    @EnvironmentObject private var factory: ViewModelFactory
     @State private var isBiographyExpanded = false
 
     init(viewModel: PersonDetailViewModel) {
@@ -181,7 +182,7 @@ struct PersonDetailView: View {
                             ForEach(movies) { movie in
                                 NavigationLink {
                                     MovieDetailView(
-                                        viewModel: viewModel.makeDetailViewModel(for: movie.id)
+                                        viewModel: factory.makeMovieDetailViewModel(for: movie.id)
                                     )
                                 } label: {
                                     knownForCard(movie)

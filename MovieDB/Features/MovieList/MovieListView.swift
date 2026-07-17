@@ -17,6 +17,7 @@ private enum Constants {
 struct MovieListView: View {
 
     @StateObject private var viewModel: MovieListViewModel
+    @EnvironmentObject private var factory: ViewModelFactory
 
     init(viewModel: MovieListViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -53,7 +54,7 @@ struct MovieListView: View {
                 }
                 .navigationDestination(for: Int.self) { movieID in
                     MovieDetailView(
-                        viewModel: viewModel.makeDetailViewModel(for: movieID)
+                        viewModel: factory.makeMovieDetailViewModel(for: movieID)
                     )
                 }
         }

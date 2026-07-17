@@ -19,12 +19,10 @@ final class PersonDetailViewModel: ObservableObject {
 
     private let personID: Int
     private let getPersonDetail: GetPersonDetailUseCase
-    private let repository: MoviesRepository
 
-    init(personID: Int, getPersonDetail: GetPersonDetailUseCase, repository: MoviesRepository) {
+    init(personID: Int, getPersonDetail: GetPersonDetailUseCase) {
         self.personID = personID
         self.getPersonDetail = getPersonDetail
-        self.repository = repository
     }
 
     // MARK: - Loading
@@ -44,12 +42,6 @@ final class PersonDetailViewModel: ObservableObject {
 
     func retry() {
         load()
-    }
-
-    // MARK: - Detail Factory
-
-    func makeDetailViewModel(for movieID: Int) -> MovieDetailViewModel {
-        MovieDetailViewModel(movieID: movieID, getMovieDetail: DefaultGetMovieDetailUseCase(repository: repository), repository: repository)
     }
 
     // MARK: - Private

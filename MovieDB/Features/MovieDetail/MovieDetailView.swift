@@ -23,6 +23,7 @@ private enum Constants {
 struct MovieDetailView: View {
     
     @StateObject private var viewModel: MovieDetailViewModel
+    @EnvironmentObject private var factory: ViewModelFactory
     @State private var showTrailer = false
     
     init(viewModel: MovieDetailViewModel) {
@@ -233,7 +234,7 @@ struct MovieDetailView: View {
                             ForEach(cast.prefix(Constants.castPreviewCount)) { member in
                                 NavigationLink {
                                     PersonDetailView(
-                                        viewModel: viewModel.makePersonDetailViewModel(for: member.id)
+                                        viewModel: factory.makePersonDetailViewModel(for: member.id)
                                     )
                                 } label: {
                                     castCard(member)
@@ -245,7 +246,7 @@ struct MovieDetailView: View {
                                 FullCastView(
                                     cast: cast,
                                     crew: crew,
-                                    makePersonDetailViewModel: viewModel.makePersonDetailViewModel
+                                    makePersonDetailViewModel: factory.makePersonDetailViewModel
                                 )
                             } label: {
                                 viewMoreCard
@@ -259,7 +260,7 @@ struct MovieDetailView: View {
                         FullCastView(
                             cast: cast,
                             crew: crew,
-                            makePersonDetailViewModel: viewModel.makePersonDetailViewModel
+                             makePersonDetailViewModel: factory.makePersonDetailViewModel
                         )
                     } label: {
                         Text("movie.fullCastCrew")
