@@ -24,8 +24,9 @@ final class ViewModelFactory: ObservableObject {
         }
 
         let http = URLSessionHTTPClient()
-        let api = TMDbAPIClient(http: http, bearerToken: token)
-        return ViewModelFactory(repository: api)
+        let apiClient = TMDbAPIClient(http: http, bearerToken: token)
+        let repository = DefaultMoviesRepository(apiClient: apiClient)
+        return ViewModelFactory(repository: repository)
     }
 
     init(repository: MoviesRepository) {

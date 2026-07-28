@@ -16,7 +16,7 @@ enum TMDbAPIError: Error {
     case decodingFailed
 }
 
-final class TMDbAPIClient: MoviesRepository {
+final class TMDbAPIClient {
 
     private let http: HTTPClient
     private let bearerToken: String
@@ -35,7 +35,7 @@ final class TMDbAPIClient: MoviesRepository {
         self.region = regionCode
     }
 
-    // MARK: - MoviesRepository
+    // MARK: - API Methods
 
     func popular(page: Int) async throws -> (movies: [Movie], totalPages: Int) {
         let url = try makeURL(path: "/movie/popular", queryItems: [
