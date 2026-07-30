@@ -7,12 +7,6 @@
 
 import Foundation
 
-private enum Constants {
-    static let theatricalReleaseType = 3
-    static let youTubeSite = "YouTube"
-    static let trailerType = "Trailer"
-}
-
 struct TMDbMovieDetailDTO: Decodable {
     let id: Int
     let title: String
@@ -39,50 +33,6 @@ struct TMDbMovieDetailDTO: Decodable {
         case releaseDates = "release_dates"
     }
 
-    func toDomainModel(region: String = "US") -> Movie {
-        let date = regionalReleaseDate(for: region) ?? primaryReleaseDate()
-
-        return Movie(
-            id: id,
-            title: title,
-            overview: overview,
-            posterPath: posterPath,
-            backdropPath: backdropPath,
-            releaseDate: date,
-            voteAverage: voteAverage,
-            genres: genres.map { Genre(id: $0.id, name: $0.name) },
-            runtime: runtime,
-            tagline: tagline,
-            trailerYouTubeKey: youTubeTrailerKey(),
-            cast: credits?.cast.map { CastMember(id: $0.id, name: $0.name, character: $0.character, profilePath: $0.profilePath) } ?? [],
-            crew: credits?.crew.map { CrewMember(id: $0.id, name: $0.name, job: $0.job, profilePath: $0.profilePath) } ?? []
-        )
-    }
-
-    // MARK: - Private
-
-    private func primaryReleaseDate() -> Date? {
-        releaseDate.flatMap { DateFormatter.tmdbDate.date(from: $0) }
-    }
-
-    private func youTubeTrailerKey() -> String? {
-        videos?.results.first {
-            $0.site == Constants.youTubeSite && $0.type == Constants.trailerType
-        }?.key
-    }
-
-    private func regionalReleaseDate(for region: String) -> Date? {
-        guard let countryRelease = releaseDates?.results.first(where: { $0.countryCode == region }) else {
-            return nil
-        }
-
-        let theatrical = countryRelease.releaseDates
-            .first { $0.type == Constants.theatricalReleaseType }
-
-        guard let dateString = theatrical?.releaseDate else { return nil }
-
-        return DateFormatter.tmdbDateTime.date(from: dateString)
-    }
 }
 
 // MARK: - Release Dates DTOs

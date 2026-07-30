@@ -26,25 +26,6 @@ struct TMDbPersonDTO: Decodable {
         case movieCredits = "movie_credits"
     }
 
-    func toDomainModel() -> Person {
-        let birthDate = birthday.flatMap { DateFormatter.tmdbDate.date(from: $0) }
-        let movies = movieCredits?.cast
-            .filter { $0.voteCount > 0 }
-            .sorted { ($0.popularity ?? 0) > ($1.popularity ?? 0) }
-            .map { $0.toDomainModel() } ?? []
-
-        return Person(
-            id: id,
-            name: name,
-            biography: biography,
-            profilePath: profilePath,
-            birthday: birthDate,
-            placeOfBirth: placeOfBirth,
-            gender: Gender(rawValue: gender) ?? .unknown,
-            knownForDepartment: knownForDepartment,
-            knownForMovies: movies
-        )
-    }
 }
 
 // MARK: - Person Movie Credits
@@ -68,24 +49,5 @@ struct TMDbPersonCastCreditDTO: Decodable {
         case releaseDate = "release_date"
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
-    }
-
-    func toDomainModel() -> Movie {
-        let date = releaseDate.flatMap { DateFormatter.tmdbDate.date(from: $0) }
-        return Movie(
-            id: id,
-            title: title,
-            overview: "",
-            posterPath: posterPath,
-            backdropPath: nil,
-            releaseDate: date,
-            voteAverage: voteAverage,
-            genres: [],
-            runtime: nil,
-            tagline: nil,
-            trailerYouTubeKey: nil,
-            cast: [],
-            crew: []
-        )
     }
 }

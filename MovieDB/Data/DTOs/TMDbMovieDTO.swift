@@ -27,25 +27,4 @@ struct TMDbMovieDTO: Decodable {
         case voteCount = "vote_count"
         case genreIDs = "genre_ids"
     }
-    
-    func toDomainModel() -> Movie {
-        let formatter = DateFormatter.tmdbDate
-        let date = releaseDate.flatMap { formatter.date(from: $0) }
-        
-        return Movie(
-            id: id,
-            title: title,
-            overview: overview,
-            posterPath: posterPath,
-            backdropPath: backdropPath,
-            releaseDate: date,
-            voteAverage: voteAverage,
-            genres: [],
-            runtime: nil,
-            tagline: nil,
-            trailerYouTubeKey: nil,
-            cast: [],
-            crew: []
-        )
-    }
 }

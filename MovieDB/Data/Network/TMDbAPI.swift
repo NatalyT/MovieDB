@@ -43,7 +43,7 @@ final class TMDbAPIClient {
         ])
 
         let dto: TMDbPageDTO<TMDbMovieDTO> = try await fetchAndDecode(url: url)
-        let movies = dto.results.map { $0.toDomainModel() }
+        let movies = dto.results.map { MovieMapper.map($0) }
 
         return (movies: movies, totalPages: dto.totalPages)
     }
@@ -54,7 +54,7 @@ final class TMDbAPIClient {
         ])
         let dto: TMDbMovieDetailDTO = try await fetchAndDecode(url: url)
 
-        return dto.toDomainModel(region: region)
+        return MovieMapper.map(dto, region: region)
     }
 
     func search(query: String, page: Int) async throws -> (movies: [Movie], totalPages: Int) {
@@ -64,7 +64,7 @@ final class TMDbAPIClient {
         ])
 
         let dto: TMDbPageDTO<TMDbMovieDTO> = try await fetchAndDecode(url: url)
-        let movies = dto.results.map { $0.toDomainModel() }
+        let movies = dto.results.map { MovieMapper.map($0) }
 
         return (movies: movies, totalPages: dto.totalPages)
     }
@@ -75,7 +75,7 @@ final class TMDbAPIClient {
         ])
         let dto: TMDbPersonDTO = try await fetchAndDecode(url: url)
 
-        return dto.toDomainModel()
+        return PersonMapper.map(dto)
     }
 
     // MARK: - Private
