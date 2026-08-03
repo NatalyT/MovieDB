@@ -44,6 +44,8 @@ The app follows Clean Architecture with MVVM, organized by feature:
 - **SFSafariViewController** for trailers -- YouTube embeds don't work reliably in WKWebView on iOS.
 - **API-first search with local fallback** -- avoids UI flicker from showing local results then replacing with API results.
 
+Navigation uses SwiftUI's declarative `NavigationStack` with value-based routing. In a larger app, a coordinator/router pattern would centralize navigation decisions.
+
 Dependencies are injected via initializers. No third-party libraries are used.
 
 ---
@@ -57,12 +59,14 @@ Dependencies are injected via initializers. No third-party libraries are used.
 ---
 
 ## Testing
-Unit tests cover ViewModels and the search component (65 tests total):
+Unit tests cover ViewModels, mappers, and the search component (88 tests total):
 
 - **MovieListViewModelTests** -- initial load, pagination, duplicate filtering, load more error, refresh, search suggestion forwarding
 - **MovieDetailViewModelTests** -- load/error/retry, formatting for year, score, runtime, genres, trailer URL, tagline, cast and crew mapping
 - **PersonDetailViewModelTests** -- load/error/retry, personal info formatting (gender, birthday, place of birth), biography, photo URL, known-for movies mapping and limit
-- **MovieSearchTests** -- debounce, API results, local fallback, cancel, empty/whitespace queries
+- **MovieMapperTests** -- DTO-to-domain mapping for movies, detail with genres/runtime/trailer/cast/crew, regional release dates
+- **PersonMapperTests** -- person mapping, gender values, birthday parsing, known-for sorting and filtering
+- **MovieSearchTests** -- debounce, API results, cancel, empty/whitespace queries
 
 A `FakeMoviesRepository` with stubs and call tracking is used for all tests. Async state changes are observed via `XCTestExpectation` with Combine.
 
@@ -76,7 +80,9 @@ Due to time constraints, some features were intentionally left out:
 - Segmented control for Now Playing / Popular / Upcoming
 - Search result pagination
 - Offline support and persistent storage
-- Broader test coverage (e.g., DTO mapping, HTTPClient, integration tests)
+- Coordinator/router pattern for centralized navigation (current SwiftUI declarative approach works well for this app size)
+- Modularization into SPM packages (Domain, Data, Presentation)
+- Broader test coverage (e.g., HTTPClient, integration tests)
 
 The current architecture allows these features to be added without major refactoring.
 
