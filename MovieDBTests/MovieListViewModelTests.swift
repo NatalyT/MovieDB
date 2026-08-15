@@ -7,6 +7,7 @@
 
 import Combine
 import XCTest
+@testable import Domain
 @testable import MovieDB
 
 @MainActor

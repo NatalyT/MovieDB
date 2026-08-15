@@ -7,19 +7,19 @@
 
 import Foundation
 
-protocol GetPopularMoviesUseCase {
+public protocol GetPopularMoviesUseCase: Sendable {
     func execute(page: Int) async throws -> (movies: [Movie], totalPages: Int)
 }
 
-final class DefaultGetPopularMoviesUseCase: GetPopularMoviesUseCase {
+public final class DefaultGetPopularMoviesUseCase: GetPopularMoviesUseCase {
 
     private let repository: MoviesRepository
 
-    init(repository: MoviesRepository) {
+    public init(repository: MoviesRepository) {
         self.repository = repository
     }
 
-    func execute(page: Int) async throws -> (movies: [Movie], totalPages: Int) {
+    public func execute(page: Int) async throws -> (movies: [Movie], totalPages: Int) {
         try await repository.popular(page: page)
     }
 }

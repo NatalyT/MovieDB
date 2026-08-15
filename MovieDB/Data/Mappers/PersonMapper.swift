@@ -5,6 +5,7 @@
 //  Created by Natalia Tatarinteva on 15.07.26.
 //
 
+import Domain
 import Foundation
 
 enum PersonMapper {

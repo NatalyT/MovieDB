@@ -5,6 +5,7 @@
 //  Created by Natalia Tatarinteva on 01.06.26.
 //
 
+import Domain
 import Foundation
 
 private enum Constants {

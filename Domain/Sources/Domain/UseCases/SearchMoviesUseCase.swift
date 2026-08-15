@@ -7,19 +7,19 @@
 
 import Foundation
 
-protocol SearchMoviesUseCase {
+public protocol SearchMoviesUseCase: Sendable {
     func execute(query: String, page: Int) async throws -> (movies: [Movie], totalPages: Int)
 }
 
-final class DefaultSearchMoviesUseCase: SearchMoviesUseCase {
+public final class DefaultSearchMoviesUseCase: SearchMoviesUseCase {
 
     private let repository: MoviesRepository
 
-    init(repository: MoviesRepository) {
+    public init(repository: MoviesRepository) {
         self.repository = repository
     }
 
-    func execute(query: String, page: Int) async throws -> (movies: [Movie], totalPages: Int) {
+    public func execute(query: String, page: Int) async throws -> (movies: [Movie], totalPages: Int) {
         try await repository.search(query: query, page: page)
     }
 }

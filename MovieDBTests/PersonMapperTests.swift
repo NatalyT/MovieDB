@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import Domain
 @testable import MovieDB
 
 final class PersonMapperTests: XCTestCase {

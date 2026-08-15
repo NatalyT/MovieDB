@@ -7,19 +7,19 @@
 
 import Foundation
 
-protocol GetMovieDetailUseCase {
+public protocol GetMovieDetailUseCase: Sendable {
     func execute(id: Int) async throws -> Movie
 }
 
-final class DefaultGetMovieDetailUseCase: GetMovieDetailUseCase {
+public final class DefaultGetMovieDetailUseCase: GetMovieDetailUseCase {
 
     private let repository: MoviesRepository
 
-    init(repository: MoviesRepository) {
+    public init(repository: MoviesRepository) {
         self.repository = repository
     }
 
-    func execute(id: Int) async throws -> Movie {
+    public func execute(id: Int) async throws -> Movie {
         try await repository.movieDetail(id: id)
     }
 }

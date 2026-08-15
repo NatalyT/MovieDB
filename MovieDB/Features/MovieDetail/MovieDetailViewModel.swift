@@ -5,8 +5,9 @@
 //  Created by Natalia Tatarinteva on 02.06.26.
 //
 
-import Foundation
 import Combine
+import Domain
+import Foundation
 
 private enum Constants {
     static let youTubeWatchBaseURL = "https://www.youtube.com/watch?v="

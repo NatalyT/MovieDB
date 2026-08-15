@@ -5,8 +5,9 @@
 //  Created by Natalia Tatarinteva on 01.06.26.
 //
 
-import Foundation
 import Combine
+import Domain
+import Foundation
 
 private enum Constants {
     static let paginationThreshold = 5

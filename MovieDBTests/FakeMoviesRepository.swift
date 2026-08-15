@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@testable import Domain
 @testable import MovieDB
 
 final class FakeMoviesRepository: MoviesRepository {

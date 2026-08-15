@@ -7,19 +7,19 @@
 
 import Foundation
 
-protocol GetPersonDetailUseCase {
+public protocol GetPersonDetailUseCase: Sendable {
     func execute(id: Int) async throws -> Person
 }
 
-final class DefaultGetPersonDetailUseCase: GetPersonDetailUseCase {
+public final class DefaultGetPersonDetailUseCase: GetPersonDetailUseCase {
 
     private let repository: MoviesRepository
 
-    init(repository: MoviesRepository) {
+    public init(repository: MoviesRepository) {
         self.repository = repository
     }
 
-    func execute(id: Int) async throws -> Person {
+    public func execute(id: Int) async throws -> Person {
         try await repository.personDetail(id: id)
     }
 }
