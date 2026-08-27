@@ -5,6 +5,7 @@
 //  Created by Natalia Tatarinteva on 04.06.26.
 //
 
+import Data
 import Foundation
 @testable import Domain
 @testable import MovieDB

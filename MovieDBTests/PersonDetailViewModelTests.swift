@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Data
 import XCTest
 @testable import Domain
 @testable import MovieDB

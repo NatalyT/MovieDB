@@ -7,24 +7,24 @@
 
 import Foundation
 
-enum HTTPClientError: Error {
+public enum HTTPClientError: Error {
     case invalidResponse
     case httpStatus(Int)
 }
 
-protocol HTTPClient {
+public protocol HTTPClient: Sendable {
     func execute(_ request: URLRequest) async throws -> Data
 }
 
-final class URLSessionHTTPClient: HTTPClient {
+public final class URLSessionHTTPClient: HTTPClient, @unchecked Sendable {
 
     private let session: URLSession
 
-    init(session: URLSession = .shared) {
+    public init(session: URLSession = .shared) {
         self.session = session
     }
 
-    func execute(_ request: URLRequest) async throws -> Data {
+    public func execute(_ request: URLRequest) async throws -> Data {
         let (data, response) = try await session.data(for: request)
 
         guard let http = response as? HTTPURLResponse else {

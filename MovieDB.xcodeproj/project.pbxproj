@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		234B8A4C2FD2B9D600C508F7 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 234B8A4B2FD2B9D600C508F7 /* Secrets.xcconfig */; };
 		23BE22C93020B8FA0014DE33 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 23BE22C83020B8FA0014DE33 /* Domain */; };
+		23CEC45D3030E354007712B8 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 23CEC45C3030E354007712B8 /* Data */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23CEC45D3030E354007712B8 /* Data in Frameworks */,
 				23BE22C93020B8FA0014DE33 /* Domain in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -100,6 +102,7 @@
 				234B89D92FCD8A7500C508F7 /* MovieDBUITests */,
 				234B89C02FCD8A7200C508F7 /* Products */,
 				234B8A4B2FD2B9D600C508F7 /* Secrets.xcconfig */,
+				23CEC45B3030E354007712B8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -111,6 +114,13 @@
 				234B89D62FCD8A7500C508F7 /* MovieDBUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		23CEC45B3030E354007712B8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,6 +144,7 @@
 			name = MovieDB;
 			packageProductDependencies = (
 				23BE22C83020B8FA0014DE33 /* Domain */,
+				23CEC45C3030E354007712B8 /* Data */,
 			);
 			productName = MovieDB;
 			productReference = 234B89BF2FCD8A7200C508F7 /* MovieDB.app */;
@@ -221,6 +232,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				23BE22C73020B8FA0014DE33 /* XCLocalSwiftPackageReference "Domain" */,
+				23CEC4143030DCBF007712B8 /* XCLocalSwiftPackageReference "Data" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 234B89C02FCD8A7200C508F7 /* Products */;
@@ -621,12 +633,21 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Domain;
 		};
+		23CEC4143030DCBF007712B8 /* XCLocalSwiftPackageReference "Data" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Data;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		23BE22C83020B8FA0014DE33 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
+		};
+		23CEC45C3030E354007712B8 /* Data */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 23CEC4143030DCBF007712B8 /* XCLocalSwiftPackageReference "Data" */;
+			productName = Data;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

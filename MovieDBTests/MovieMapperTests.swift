@@ -7,6 +7,7 @@
 
 import XCTest
 @testable import Domain
+@testable import Data
 @testable import MovieDB
 
 final class MovieMapperTests: XCTestCase {

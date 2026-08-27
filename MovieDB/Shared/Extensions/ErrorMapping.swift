@@ -5,6 +5,7 @@
 //  Created by Natalia Tatarinteva on 03.06.26.
 //
 
+import Data
 import Foundation
 
 enum ErrorMapping {

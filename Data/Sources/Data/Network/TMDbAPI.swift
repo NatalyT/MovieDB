@@ -12,12 +12,12 @@ private enum Constants {
     static let baseURL = "https://api.themoviedb.org/3"
 }
 
-enum TMDbAPIError: Error {
+public enum TMDbAPIError: Error {
     case invalidURL
     case decodingFailed
 }
 
-final class TMDbAPIClient {
+public final class TMDbAPIClient: @unchecked Sendable {
 
     private let http: HTTPClient
     private let bearerToken: String
@@ -25,7 +25,7 @@ final class TMDbAPIClient {
     private let language: String
     private let region: String
 
-    init(http: HTTPClient, bearerToken: String, locale: Locale = .current, decoder: JSONDecoder = JSONDecoder()) {
+    public init(http: HTTPClient, bearerToken: String, locale: Locale = .current, decoder: JSONDecoder = JSONDecoder()) {
         self.http = http
         self.bearerToken = bearerToken
         self.decoder = decoder
